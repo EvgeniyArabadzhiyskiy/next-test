@@ -3,6 +3,10 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  compiler: {
+    styledComponents: true,
+  },
+
   images: {
     remotePatterns: [
       {
@@ -14,8 +18,6 @@ const nextConfig = {
     ],
   },
 
-
-  // pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
 }
 
 module.exports = nextConfig
