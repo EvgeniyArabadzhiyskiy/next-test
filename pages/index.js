@@ -1,24 +1,52 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
-import '../fetch-polyfill'
-import Link from 'next/link'
-import Statistic from '@/components/Statistic/Statistic'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import Head from "next/head";
+import Image from "next/image";
+import { Inter } from "@next/font/google";
+import styles from "@/styles/Home.module.css";
+import "../fetch-polyfill";
+import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
-const inter = Inter({ subsets: ['latin'] })
+import useSWR, { SWRConfig } from "swr";
 
-export default function Home() {
+const inter = Inter({ subsets: ["latin"] });
 
+const fetcher = (url) => fetch(url).then((res) => res.json());
+const API = "https://api.github.com/repos/vercel/swr";
+
+export async function getServerSideProps() {
+  const repoInfo = await fetcher(API);
+  return {
+    props: {
+      fallback: {
+        [API]: repoInfo,
+      },
+    },
+  };
+}
+
+function Repo() {
+  const { data, error } = useSWR(API);
+
+  if (error) return "An error has occurred.";
+  if (!data) return "Loading...";
+  return (
+    <div>
+      <h1>{data.name}</h1>
+      <p>{data.description}</p>
+      <strong>👀 {data.subscribers_count}</strong>{" "}
+      <strong>✨ {data.stargazers_count}</strong>{" "}
+      <strong>🍴 {data.forks_count}</strong>
+    </div>
+  );
+}
+
+export default function Home({ fallback }) {
   // const router = useRouter()
 
   // useEffect(() => {
   //   router.push('/pokemons')
   // },[router])
-
-
 
   return (
     <>
@@ -28,6 +56,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {/* <SWRConfig value={{ fallback }}>
+        <Repo />
+      </SWRConfig> */}
+
       <main className={styles.main}>
         <div className={styles.description}>
           <Link href='/pokemons' >Go Pokemons</Link>
@@ -108,7 +141,7 @@ export default function Home() {
         </div>
       </main>
     </>
-  )
+  );
 }
 
 // export async function getStaticProps() {
