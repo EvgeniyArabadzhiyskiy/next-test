@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 const PageError = () => {
   const router = useRouter();
+  console.log("PageError  router", router.pathname);
 
   const timeoutId = useRef(null);
 
