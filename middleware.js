@@ -6,7 +6,7 @@ export function middleware(request) {
 
 
 
-  const cookies = request.cookies
+  // const cookies = request.cookies
   // console.log("middleware  cookies", !!cookies.get('goit')?.value);
   
 
@@ -37,6 +37,6 @@ export function middleware(request) {
   return response;
 }
 
-// export const config = {
-//   matcher: ['/blog', "/pokemons"],
-// };
+export const config = {
+  matcher: ['/blog', "/pokemons"],
+};
