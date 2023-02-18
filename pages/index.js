@@ -65,6 +65,7 @@ export default function Home({ fallback }) {
         <div className={styles.description}>
           <Link href='/pokemons' >Go Pokemons</Link>
           <Link href='/blog' >Go Blog</Link>
+          <Link href="/pixabay" >PIXABAY</Link>
           <p>
             Get started by editing&nbsp;
             <code className={styles.code}>pages/index.js</code>
