@@ -38,5 +38,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/blog', "/pokemons"],
+  matcher: ['/blog'],
 };
