@@ -46,12 +46,11 @@ export const walletApi = createApi({
   }),
 });
 
-// Export hooks for usage in functional components
 export const {
   useGetAllTransactionsQuery,
   useDeleteTransactionMutation,
   util: { getRunningQueriesThunk },
 } = walletApi;
 
-// export endpoints for use in SSR
 export const { getAllTransactions, deleteTransaction } = walletApi.endpoints;
+
