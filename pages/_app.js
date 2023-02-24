@@ -30,7 +30,7 @@ const App = ({ Component, ...rest }) => {
    return (
     <Provider store={store}>
       <GlobalLayout>
-        {getLayout(<Component {...props.pageProps} />)}
+        { getLayout(<Component {...props.pageProps} />) }
       </GlobalLayout>
       <GlobalStyles />
     </Provider>
