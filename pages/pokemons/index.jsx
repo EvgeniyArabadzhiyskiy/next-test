@@ -12,25 +12,29 @@ import { useSelector } from "react-redux";
 
 import { useEffect, useState } from "react";
 
-
-import { getAllTransactions, useDeleteTransactionMutation, useGetAllTransactionsQuery, getRunningQueriesThunk } from "@/redux/walletApi";
+import {
+  getAllTransactions,
+  useDeleteTransactionMutation,
+  useGetAllTransactionsQuery,
+  getRunningQueriesThunk,
+} from "@/redux/walletApi";
 import axios from "axios";
 import Counter from "@/components/Counter/Counter";
 
-export const getStaticProps = async () => {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon`);
-  const data = await response.json();
-  console.log("getStaticProps  data", data);
+// export const getStaticProps = async () => {
+//   const response = await fetch(`https://pokeapi.co/api/v2/pokemon`);
+//   const data = await response.json();
+//   // console.log("getStaticProps  data", data);
 
-  return {
-    props: {
-      initialTodos: data.results,
-    }
-  }
-};
+//   return {
+//     props: {
+//       initialPokemons: data.results,
+//     }
+//   }
+// };
 
 // export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
-//   const { counter } = store.getState().counter 
+//   const { counter } = store.getState().counter
 //   store.dispatch(getPokemonList.initiate(counter));
 //   await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
@@ -38,13 +42,11 @@ export const getStaticProps = async () => {
 //     props: {},
 //   };
 // });
-
-
 
 // export const getStaticProps = wrapper.getStaticProps((store) => async () => {
 
 //   const { counter } = store.getState().counter  // Для примера
-  
+
 //   store.dispatch(getPokemonList.initiate(counter));
 //   await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
@@ -53,35 +55,35 @@ export const getStaticProps = async () => {
 //   };
 // });
 
+export const getStaticProps = wrapper.getStaticProps((store) => async () => {
+  store.dispatch(getAllTransactions.initiate());
+  const result = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
-// export const getStaticProps = wrapper.getStaticProps((store) => async () => {
-//   store.dispatch(getAllTransactions.initiate());
-//   const result =   await Promise.all(store.dispatch(getRunningQueriesThunk()));
+  console.log("==============SERVER=STATIC=PROPS============================");
 
-//   console.log('==============SERVER=STATIC=PROPS============================');
- 
-//   return {
-//     props: {
-//       response: result[0] 
-//     },
-//   };
-// });
+  return {
+    props: {
+      // response: result[0].data
+    },
+  };
+});
 
 const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY3NjY2MzEzMSwiZXhwIjoxNjc3ODcyNzMxfQ.W9CvqyVwufke2XcMuWvPBMBJwxLkhYao1TZnJr6YfMg`;
-axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-const Pokemons = ({ response, initialTodos }) => {
-  const [pokemons, setTodos] = useState(initialTodos);
+const Pokemons = ({}) => {
+  // console.log("Pokemons  response:", response);
+  // const [pokemons, setPokemon] = useState(initialPokemons);
 
-  const deletePokemon = (namePok) => {
-    setTodos((prevTodos) =>
-      prevTodos.filter(({ name }) => name !== namePok)
-    )
-  }
+  // const deletePokemon = (namePok) => {
+  //   setPokemon((prevTodos) =>
+  //     prevTodos.filter(({ name }) => name !== namePok)
+  //   )
+  // }
 
   // const { data: pokemons, isError, isLoading } = response
-  
-  const { counter } = useSelector(st => st.counter)
+
+  // const { counter } = useSelector((st) => st.counter);
 
   // const [pokemons, setPokemons] = useState(null);
   // console.log("Pokemons  pokemons", pokemons);
@@ -96,25 +98,22 @@ const Pokemons = ({ response, initialTodos }) => {
   //   getTransactions();
   // }, []);
 
-  
-  // const [trans, setTrans] = useState(null);
-  // const {data: result} = useGetAllTransactionsQuery()
+  // const { data: response } = useGetAllTransactionsQuery();
+  // console.log("Pokemons  response:", response);
 
-  //  useEffect(() => {
-  //   if (result) {
-  //     setTrans(result)
-      
-  //   }
-  // }, [result]);
-  // console.log("Pokemons  result", result);
+  const { data: result } = useGetAllTransactionsQuery(undefined,{});
+  // console.log("Pokemons  data:", data);
+
+  // const [result, setTrans] = useState(data);
+  // console.log("Pokemons  trans:", result);
 
 
-  // const [deleteTrRTKQ] = useDeleteTransactionMutation()
 
+  const [deleteTrRTKQ] = useDeleteTransactionMutation();
 
-  // const deleteTrans = () => {
-  //   deleteTrRTKQ('63b840fd3474cbf1d3e930a5')
-  // }
+  const deleteTrans = (id) => {
+    deleteTrRTKQ(id);
+  };
 
   // const { data: pokemons = [], isLoading } = useGetPokemonListQuery(counter);
   // console.log("Pokemons  pokemons", pokemons);
@@ -138,7 +137,7 @@ const Pokemons = ({ response, initialTodos }) => {
         <h1>Pokemons</h1>
         {/* <Counter /> */}
 
-        <ul>
+        {/* <ul>
           {pokemons &&
             pokemons.map((pokemon) => {
               return (
@@ -148,21 +147,25 @@ const Pokemons = ({ response, initialTodos }) => {
                 // </Link>
               );
             })}
-        </ul>
+        </ul> */}
 
         <Link href="/"> ← Back to home</Link>
         <Link href="/pokemons/statistic">Go Statistic</Link>
-       
       </div>
 
-      {/* <ul>
-        {trans?.transactions &&
-          trans?.transactions.map((pokemon) => {
-            return <li key={pokemon._id}>{pokemon.category}</li>;
+      <ul>
+        {result?.transactions &&
+          result?.transactions.map((pokemon) => {
+            return (
+              <li key={pokemon._id}>
+                {pokemon.category}
+                <button type="button" onClick={() => deleteTrans(pokemon._id)}>
+                  DELETE
+                </button>
+              </li>
+            );
           })}
-      </ul> */}
-
-      {/* <button type="button" onClick={deleteTrans} >DELETE</button> */}
+      </ul>
     </>
   );
 };
