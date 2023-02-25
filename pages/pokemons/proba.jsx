@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { wrapper } from "@/redux/store";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   getAllTransactions,
@@ -10,8 +11,16 @@ import {
   getRunningQueriesThunk,
 } from "@/redux/walletApi";
 
-export const getStaticProps = wrapper.getStaticProps((store) => async () => {
-  store.dispatch(getAllTransactions.initiate());
+import {
+  getTransactions,
+  setInitialTransactions,
+  setNextPage,
+} from "@/redux/transactions-slice";
+
+export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
+  const { pageNum } = store.getState().transactions
+
+  store.dispatch(getAllTransactions.initiate({ pageNum }));
   const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
   return {
@@ -21,23 +30,33 @@ export const getStaticProps = wrapper.getStaticProps((store) => async () => {
   };
 });
 
-const TransactionsList = ({ initialData }) => {
-  const { data } = useGetAllTransactionsQuery(undefined,{
-    skip: typeof window === "undefined",
-  });
-
+const TransactionsList = ({ initialData = [] }) => {
+  // const [pageNum, setPage] = useState(1);
+  const [isSkip, setIsSkip] = useState(true);
   const [result, setResult] = useState(initialData);
 
+  const dispatch = useDispatch();
+  const { transactions, pageNum } = useSelector(state => state.transactions);
+
+  const { data = [] } = useGetAllTransactionsQuery({ pageNum }, { skip: isSkip });
+  
   useEffect(() => {
-    if (data?.transactions) {
-      setResult(data);
-    }
+    if (data.length === 0)  return
+
+    setResult(prev => [...prev, ...data]);
   }, [data]);
 
   const [deleteTransactionRTKQ] = useDeleteTransactionMutation();
 
   const deleteTransaction = (id) => {
-    deleteTransactionRTKQ(id);
+    // deleteTransactionRTKQ(id);
+  };
+
+  const onNextPage = () => {
+    dispatch(setNextPage())
+
+    setIsSkip(false);
+    // setPage((prev) => prev + 1);
   };
 
   return (
@@ -51,11 +70,14 @@ const TransactionsList = ({ initialData }) => {
         <h1>Transactions</h1>
 
         <Link href="/"> ← Back to home</Link>
+        <button type="button" onClick={onNextPage}>
+          Next Page
+        </button>
       </div>
 
       <ul className="transactions-list">
-        {result?.transactions &&
-          result?.transactions.map((item) => {
+        {result &&
+          result.map((item) => {
             return (
               <li key={item._id}>
                 {item.category}
@@ -74,3 +96,92 @@ const TransactionsList = ({ initialData }) => {
 };
 
 export default TransactionsList;
+
+//===========================================================
+
+// import Head from "next/head";
+// import Link from "next/link";
+// import { useEffect, useState } from "react";
+// import { useDeleteTransactionMutation } from "@/redux/walletApi";
+
+// import axios from "axios";
+// const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY3NjY2MzEzMSwiZXhwIjoxNjc3ODcyNzMxfQ.W9CvqyVwufke2XcMuWvPBMBJwxLkhYao1TZnJr6YfMg`;
+// axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+// export const getStaticProps = async () => {
+//   const response = await axios(
+//     `https://wallet-backend-xmk0.onrender.com/api/transactions?page=1&limit=5`
+//   );
+
+//   return {
+//     props: {
+//       initialData: response.data.transactions,
+//     },
+//   };
+// };
+
+// const TransactionsList = ({ initialData }) => {
+//   const [pageNum, setPage] = useState(1);
+//   const [isSkip, setIsSkip] = useState(true);
+//   const [result, setResult] = useState(initialData);
+
+//   useEffect(() => {
+//     if (isSkip) return;
+
+//     (async () => {
+//       const { data } = await axios(
+//         `https://wallet-backend-xmk0.onrender.com/api/transactions?page=${pageNum}&limit=5`
+//       );
+
+//       setResult((prev) => [...prev, ...data?.transactions]);
+//     })();
+//   }, [isSkip, pageNum]);
+
+//   const [deleteTransactionRTKQ] = useDeleteTransactionMutation();
+
+//   const deleteTransaction = (id) => {
+//     // deleteTransactionRTKQ(id);
+//   };
+
+//   const onNextPage = () => {
+//     setIsSkip(false);
+//     setPage((prev) => prev + 1);
+//   };
+
+//   return (
+//     <>
+//       <Head>
+//         <title>Transactions</title>
+//         <meta name="description" content="Transactions List" />
+//       </Head>
+
+//       <div>
+//         <h1>Transactions</h1>
+
+//         <Link href="/"> ← Back to home</Link>
+//         <button type="button" onClick={onNextPage}>
+//           Next Page
+//         </button>
+//       </div>
+
+//       <ul className="transactions-list">
+//         {result &&
+//           result.map((item) => {
+//             return (
+//               <li key={item._id}>
+//                 {item.category}
+//                 <button
+//                   type="button"
+//                   onClick={() => deleteTransaction(item._id)}
+//                 >
+//                   DELETE
+//                 </button>
+//               </li>
+//             );
+//           })}
+//       </ul>
+//     </>
+//   );
+// };
+
+// export default TransactionsList;
