@@ -31,9 +31,11 @@ export const walletApi = createApi({
   endpoints: (builder) => ({
     getAllTransactions: builder.query({
       query: ({ pageNum = 1, limit = 10 } = {}) => ({
-        url: `/transactions?page=${pageNum}&limit=10`,
+        url: `/transactions?page=${pageNum}&limit=5`,
         method: "GET",
       }),
+
+      transformResponse: (response) => response.transactions,
 
       providesTags: ["Transaction"],
     }),
@@ -53,4 +55,3 @@ export const {
 } = walletApi;
 
 export const { getAllTransactions, deleteTransaction } = walletApi.endpoints;
-
