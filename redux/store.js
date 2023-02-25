@@ -3,6 +3,7 @@ import { createWrapper } from "next-redux-wrapper";
 import { authReducer } from "./auth/authSlice";
 import { counterReduser } from "./counter/counter";
 import { pokemonApi } from "./pokemonApi";
+import { transactionReducer } from "./transactions-slice";
 import { walletApi } from "./walletApi";
 
 
@@ -11,6 +12,7 @@ export const makeStore = () =>
     reducer: {
       [pokemonApi.reducerPath]: pokemonApi.reducer,
       [walletApi.reducerPath]: walletApi.reducer,
+      transactions: transactionReducer,
 
       counter: counterReduser,
       auth: authReducer,
