@@ -17,20 +17,16 @@ import {
   setNextPage,
 } from "@/redux/transactions-slice";
 
-export const getServerSideProps = wrapper.getServerSideProps(
+export const getStaticProps = wrapper.getStaticProps(
   (store) => async () => {
     const { pageNum } = store.getState().transactions;
 
     store.dispatch(getAllTransactions.initiate({ pageNum }));
-    const [result] = await Promise.all(
-      store.dispatch(getRunningQueriesThunk())
-    );
+    const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
     store.dispatch(setInitialTransactions(result.data));
 
-    return {
-      props: {},
-    };
+    return { props: {} };
   }
 );
 
@@ -40,10 +36,7 @@ const TransactionsList = () => {
   const dispatch = useDispatch();
   const { transactions, pageNum } = useSelector((state) => state.transactions);
 
-  const { data = [] } = useGetAllTransactionsQuery(
-    { pageNum },
-    { skip: isSkip }
-  );
+  const { data = [] } = useGetAllTransactionsQuery({ pageNum },{ skip: isSkip });
 
   useEffect(() => {
     if (data.length === 0) return;
@@ -74,9 +67,7 @@ const TransactionsList = () => {
         <h1>Transactions</h1>
 
         <Link href="/"> ← Back to home</Link>
-        <button type="button" onClick={onNextPage}>
-          Next Page
-        </button>
+        <button type="button" onClick={onNextPage}>Next Page</button>
       </div>
 
       <ul className="transactions-list">
@@ -84,11 +75,8 @@ const TransactionsList = () => {
           transactions.map((item) => {
             return (
               <li key={item._id}>
-                {item.category}
-                <button
-                  type="button"
-                  onClick={() => deleteTransaction(item._id)}
-                >
+                <span>{item.category}</span>
+                <button type="button" onClick={() => deleteTransaction(item._id)}>
                   DELETE
                 </button>
               </li>
@@ -107,7 +95,6 @@ export default TransactionsList;
 // import Link from "next/link";
 // import { wrapper } from "@/redux/store";
 // import { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
 
 // import {
 //   getAllTransactions,
@@ -116,13 +103,7 @@ export default TransactionsList;
 //   getRunningQueriesThunk,
 // } from "@/redux/walletApi";
 
-// import {
-//   getTransactions,
-//   setInitialTransactions,
-//   setNextPage,
-// } from "@/redux/transactions-slice";
-
-// export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
+// export const getStaticProps = wrapper.getStaticProps((store) => async () => {
 //   const { pageNum } = store.getState().transactions
 
 //   store.dispatch(getAllTransactions.initiate({ pageNum }));
@@ -136,12 +117,9 @@ export default TransactionsList;
 // });
 
 // const TransactionsList = ({ initialData = [] }) => {
-//   // const [pageNum, setPage] = useState(1);
+//   const [pageNum, setPage] = useState(1);
 //   const [isSkip, setIsSkip] = useState(true);
 //   const [result, setResult] = useState(initialData);
-
-//   const dispatch = useDispatch();
-//   const { transactions, pageNum } = useSelector(state => state.transactions);
 
 //   const { data = [] } = useGetAllTransactionsQuery({ pageNum }, { skip: isSkip });
 
@@ -158,130 +136,8 @@ export default TransactionsList;
 //   };
 
 //   const onNextPage = () => {
-//     dispatch(setNextPage())
-
 //     setIsSkip(false);
-//     // setPage((prev) => prev + 1);
-//   };
-
-//   return (
-//     <>
-//       <Head>
-//         <title>Transactions</title>
-//         <meta name="description" content="Transactions List" />
-//       </Head>
-
-//       <div>
-//         <h1>Transactions</h1>
-
-//         <Link href="/"> ← Back to home</Link>
-//         <button type="button" onClick={onNextPage}>
-//           Next Page
-//         </button>
-//       </div>
-
-//       <ul className="transactions-list">
-//         {result &&
-//           result.map((item) => {
-//             return (
-//               <li key={item._id}>
-//                 {item.category}
-//                 <button
-//                   type="button"
-//                   onClick={() => deleteTransaction(item._id)}
-//                 >
-//                   DELETE
-//                 </button>
-//               </li>
-//             );
-//           })}
-//       </ul>
-//     </>
-//   );
-// };
-
-// export default TransactionsList;
-
-//==========================================================
-
-// import Head from "next/head";
-// import Link from "next/link";
-// import { wrapper } from "@/redux/store";
-// import { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-
-// import {
-//   getAllTransactions,
-//   useDeleteTransactionMutation,
-//   useGetAllTransactionsQuery,
-//   getRunningQueriesThunk,
-// } from "@/redux/walletApi";
-
-// import {
-//   getTransactions,
-//   setInitialTransactions,
-//   setNextPage,
-// } from "@/redux/transactions-slice";
-
-// export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
-//   const { pageNum } = store.getState().transactions
-
-//   store.dispatch(getAllTransactions.initiate({ pageNum }));
-//   const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
-
-//   store.dispatch(setInitialTransactions(result.data))
-
-//   const {transactions} = store.getState().transactions
-
-//   return {
-//     props: {
-//       initialData: result.data,
-//       // initialData: transactions,
-//       state: transactions,
-//     },
-//   };
-// });
-
-// const TransactionsList = ({ initialData = [] }) => {
-//   // console.log("TransactionsList  initialData:", initialData);
-//   // const [pageNum, setPage] = useState(1);
-//   const [isSkip, setIsSkip] = useState(true);
-//   // const [result, setResult] = useState(initialData);
-
-//   const dispatch = useDispatch();
-//   const { transactions: result, pageNum } = useSelector(state => state.transactions);
-//   console.log("TransactionsList  transactions:", result);
-
-//   const { data = [] } = useGetAllTransactionsQuery({ pageNum }, { skip: isSkip });
-
-//   // useEffect(() => {
-//   //   if (data.length === 0)  return
-
-//   //   setResult(prev => [...prev, ...data]);
-//   // }, [data]);
-
-//   useEffect(() => {
-//     dispatch(setInitialTransactions(initialData))
-//   }, [dispatch, initialData]);
-
-//   useEffect(() => {
-//     if (data.length === 0)  return
-
-//     dispatch(getTransactions(data))
-
-//   }, [data, dispatch]);
-
-//   const [deleteTransactionRTKQ] = useDeleteTransactionMutation();
-
-//   const deleteTransaction = (id) => {
-//     // deleteTransactionRTKQ(id);
-//   };
-
-//   const onNextPage = () => {
-//     dispatch(setNextPage())
-
-//     setIsSkip(false);
-//     // setPage((prev) => prev + 1);
+//     setPage((prev) => prev + 1);
 //   };
 
 //   return (
@@ -411,108 +267,4 @@ export default TransactionsList;
 
 // export default TransactionsList;
 
-//======================================================
-
-
-
-//===========================================================
-
-// import Head from "next/head";
-// import Link from "next/link";
-// import { wrapper } from "@/redux/store";
-// import { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-
-// import {
-//   getAllTransactions,
-//   useDeleteTransactionMutation,
-//   useGetAllTransactionsQuery,
-//   getRunningQueriesThunk,
-// } from "@/redux/walletApi";
-
-// import {
-//   getTransactions,
-//   setInitialTransactions,
-//   setNextPage,
-// } from "@/redux/transactions-slice";
-
-// export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
-//   const { pageNum } = store.getState().transactions
-
-//   store.dispatch(getAllTransactions.initiate({ pageNum }));
-//   const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
-
-//   store.dispatch(setInitialTransactions(result.data))
-
-//   return {
-//     props: {},
-//   };
-// });
-
-// const TransactionsList = () => {
-//   const [isSkip, setIsSkip] = useState(true);
-
-//   const dispatch = useDispatch();
-//   const { transactions: result, pageNum } = useSelector(state => state.transactions);
-
-//   const { data = [] } = useGetAllTransactionsQuery({ pageNum }, { skip: isSkip });
-
-//   useEffect(() => {
-//     if (data.length === 0)  return
-
-//     dispatch(getTransactions(data))
-
-//   }, [data, dispatch]);
-
-//   const [deleteTransactionRTKQ] = useDeleteTransactionMutation();
-
-//   const deleteTransaction = (id) => {
-//     deleteTransactionRTKQ(id);
-//   };
-
-//   const onNextPage = () => {
-//     dispatch(setNextPage())
-
-//     setIsSkip(false);
-//   };
-
-//   return (
-//     <>
-//       <Head>
-//         <title>Transactions</title>
-//         <meta name="description" content="Transactions List" />
-//       </Head>
-
-//       <div>
-//         <h1>Transactions</h1>
-
-//         <Link href="/"> ← Back to home</Link>
-//         <button type="button" onClick={onNextPage}>
-//           Next Page
-//         </button>
-//       </div>
-
-//       <ul className="transactions-list">
-//         {result &&
-//           result.map((item) => {
-//             return (
-//               <li key={item._id}>
-//                 {item.category}
-//                 <button
-//                   type="button"
-//                   onClick={() => deleteTransaction(item._id)}
-//                 >
-//                   DELETE
-//                 </button>
-//               </li>
-//             );
-//           })}
-//       </ul>
-//     </>
-//   );
-// };
-
-// export default TransactionsList;
-
 //========================================================
-
