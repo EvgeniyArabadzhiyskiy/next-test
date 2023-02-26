@@ -57,19 +57,17 @@ import Counter from "@/components/Counter/Counter";
 
 export const getStaticProps = wrapper.getStaticProps((store) => async () => {
   store.dispatch(getAllTransactions.initiate());
-  const result = await Promise.all(store.dispatch(getRunningQueriesThunk()));
-
-  console.log("==============SERVER=STATIC=PROPS============================");
+  const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
   return {
     props: {
-      // response: result[0].data
+      response: result.data
     },
   };
 });
 
-const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY3NjY2MzEzMSwiZXhwIjoxNjc3ODcyNzMxfQ.W9CvqyVwufke2XcMuWvPBMBJwxLkhYao1TZnJr6YfMg`;
-axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+// const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY3NjY2MzEzMSwiZXhwIjoxNjc3ODcyNzMxfQ.W9CvqyVwufke2XcMuWvPBMBJwxLkhYao1TZnJr6YfMg`;
+// axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
 const Pokemons = ({}) => {
   // console.log("Pokemons  response:", response);
@@ -98,11 +96,10 @@ const Pokemons = ({}) => {
   //   getTransactions();
   // }, []);
 
-  // const { data: response } = useGetAllTransactionsQuery();
-  // console.log("Pokemons  response:", response);
+ 
 
   const { data: result } = useGetAllTransactionsQuery(undefined,{});
-  // console.log("Pokemons  data:", data);
+ 
 
   // const [result, setTrans] = useState(data);
   // console.log("Pokemons  trans:", result);
@@ -154,8 +151,8 @@ const Pokemons = ({}) => {
       </div>
 
       <ul>
-        {result?.transactions &&
-          result?.transactions.map((pokemon) => {
+        {result &&
+          result.map((pokemon) => {
             return (
               <li key={pokemon._id}>
                 {pokemon.category}
