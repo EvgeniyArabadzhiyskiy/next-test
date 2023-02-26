@@ -64,6 +64,7 @@ export default function Home({ fallback }) {
       <main className={styles.main}>
         <div className={styles.description}>
           <Link href='/pokemons' >Go Pokemons</Link>
+          <Link href="/pokemons/proba">Pokemons Proba</Link>
           <Link href='/blog' >Go Blog</Link>
           <Link href="/pixabay" >PIXABAY</Link>
           <p>
