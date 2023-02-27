@@ -3,6 +3,7 @@ import Link from "next/link";
 import { wrapper } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Counter from "@/components/Counter/Counter";
 
 import {
   getAllTransactions,
@@ -16,6 +17,7 @@ import {
   setInitialTransactions,
   setNextPage,
 } from "@/redux/transactions-slice";
+
 
 export const getStaticProps = wrapper.getStaticProps(
   (store) => async () => {
@@ -32,6 +34,8 @@ export const getStaticProps = wrapper.getStaticProps(
 
 const TransactionsList = () => {
   const [isSkip, setIsSkip] = useState(true);
+  const { counter } = useSelector(state => state.counter);
+  console.log("TransactionsList  counter:", counter);
 
   const dispatch = useDispatch();
   const { transactions, pageNum } = useSelector((state) => state.transactions);
@@ -67,8 +71,11 @@ const TransactionsList = () => {
         <h1>Transactions</h1>
 
         <Link href="/"> ← Back to home</Link>
+        
         <button type="button" onClick={onNextPage}>Next Page</button>
       </div>
+
+      <Counter />
 
       <ul className="transactions-list">
         {transactions &&
