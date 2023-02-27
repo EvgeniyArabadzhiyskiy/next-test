@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { HYDRATE } from "next-redux-wrapper";
-
 const transactionsSlice = createSlice({
   name: "transactions",
   initialState: {
@@ -19,12 +17,7 @@ const transactionsSlice = createSlice({
     },
 
     setInitialTransactions: (state, action) => {
-      
-      if (action.type === HYDRATE) {
-        state.transactions = [777777]
-      } else {
-        state.transactions = action.payload;
-      }
+      state.transactions = action.payload;
     },
   },
 });
