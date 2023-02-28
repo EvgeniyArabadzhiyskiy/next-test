@@ -16,10 +16,13 @@
 // });
 
 // const hydrateReducer = (state, action) => {
+// console.log("hydrateReducer  state:=================================", action.payload);
+
+  
 //   if (action.type === HYDRATE) {
 //     let nextState = {
 //       ...state,
-//       ...action.payload,
+//       transactions: action.payload.transactions,
 //     };
 
 //     return nextState;
