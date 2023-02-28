@@ -1,3 +1,4 @@
+import Counter from "@/components/Counter/Counter";
 import NestedLayout from "@/components/NestedLayout";
 import { makeStore } from "@/redux/store";
 import Link from "next/link";
@@ -46,6 +47,7 @@ const Blog = () => {
     <>
       <h1>Page Blog</h1>
       <Link href="/">GO HOME</Link>
+      <Counter />
     </>
   );
 };
@@ -81,16 +83,4 @@ Blog.getLayout = function getLayout(page) {
 
 //============================================================================
 
-// import { NextResponse } from 'next/server'
 
-// export async function middleware(req) {
-//     const { pathname } = req.nextUrl
-
-//     if (pathname === '/') {
-//         return NextResponse.redirect('http://localhost:3000/pokemons')
-//     }
-//     return NextResponse.next()
-// }
-
-// eslint-disable-next-line import/no-anonymous-default-export
-// export default () => {}
