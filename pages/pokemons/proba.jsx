@@ -35,7 +35,6 @@ export const getStaticProps = wrapper.getStaticProps(
 const TransactionsList = () => {
   const [isSkip, setIsSkip] = useState(true);
   const { counter } = useSelector(state => state.counter);
-  console.log("TransactionsList  counter:", counter);
 
   const dispatch = useDispatch();
   const { transactions, pageNum } = useSelector((state) => state.transactions);
