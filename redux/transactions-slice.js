@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { HYDRATE } from "next-redux-wrapper";
 
 const transactionsSlice = createSlice({
   name: "transactions",
@@ -20,6 +21,26 @@ const transactionsSlice = createSlice({
       state.transactions = action.payload;
     },
   },
+
+  extraReducers: (builder) => {
+    builder.addCase(HYDRATE, (state, action) => {
+      // console.log("action:", action.payload.transactions.transactions);
+      return {
+        ...state,
+        ...action.payload.transactions,
+      };
+    });
+  },
+
+  // extraReducers: {
+  //   [HYDRATE]: (state, action) => {
+  //     // console.log("action:", action.payload.transactions.transactions);
+  //     return {
+  //       ...state,
+  //       ...action.payload.transactions,
+  //     };
+  //   },
+  // },
 });
 
 export const {
