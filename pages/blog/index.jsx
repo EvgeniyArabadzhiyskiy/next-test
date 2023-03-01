@@ -26,10 +26,12 @@ import { useSelector } from "react-redux";
 //   }
 // }
 
-const Blog = () => {
+const Blog = (props) => {
   const router = useRouter();
 
   const { isLoggedIn } = useSelector((st) => st.auth);
+  // const { transactions, pageNum } = useSelector((state) => state.transactions);
+  // console.log("Blog  transactions:", transactions);
 
   // useEffect(() => {
   //   // if (!isLoggedIn) {
@@ -43,11 +45,19 @@ const Blog = () => {
   //   }
   // },[router]);
 
+  const onProba = () => {
+    router.push('/pokemons/proba')
+  }
+
   return (
     <>
       <h1>Page Blog</h1>
       <Link href="/">GO HOME</Link>
       <Counter />
+
+      <h3>{props.id}</h3>
+
+      <button type="button" onClick={onProba}>PROBA</button>
     </>
   );
 };
