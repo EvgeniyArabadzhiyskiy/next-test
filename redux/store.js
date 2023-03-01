@@ -16,15 +16,29 @@
 // });
 
 // const hydrateReducer = (state, action) => {
-// console.log("hydrateReducer  state:=================================", action.payload);
-
+//   // console.log("hydrateReducer  state:=================================", action.payload);
   
 //   if (action.type === HYDRATE) {
 //     let nextState = {
 //       ...state,
-//       transactions: action.payload.transactions,
-//     };
+//       ...action.payload,
+//       // counter: {
+//       //   counter : state.counter.counter
+//       // },
 
+//       // transactions: action.payload.transactions,
+//     };
+//     // console.log("hydrateReducer  state.counter.counter:", !!state.transactions.transactions.length === 0);
+
+//     // if (state.counter.counter) {
+//     //   console.log("Hello");
+//     //   nextState.counter.counter = state.counter.counter
+//     // }
+
+//     // if (state.transactions.transactions.length === 0) {
+//     //   console.log("Hello");
+//     //   nextState.transactions.transactions = state.transactions.transactions
+//     // }
 //     return nextState;
 //   } else {
 //     return rootReducer(state, action);
@@ -46,6 +60,8 @@
 
 // export const wrapper = createWrapper(makeStore);
 
+
+
 //===============================================================
 
 import { configureStore } from "@reduxjs/toolkit";
@@ -61,8 +77,8 @@ export const makeStore = () =>
     reducer: {
       [pokemonApi.reducerPath]: pokemonApi.reducer,
       [walletApi.reducerPath]: walletApi.reducer,
-      transactions: transactionReducer,
 
+      transactions: transactionReducer,
       counter: counterReduser,
       auth: authReducer,
     },
