@@ -5,47 +5,53 @@ import { GlobalStyles } from "@/styles/globalStyles";
 import AbortController from "abort-controller";
 import { Provider } from "react-redux";
 
+import App from "next/app";
+import { incrementCounter, setInitialCounter } from "@/redux/counter/counter";
+import { setInitialTransactions } from "@/redux/transactions-slice";
+
 globalThis.AbortController = AbortController;
 // import { wrapper } from "@/redux/store";     // НЕ РАБОТАЕТ С ТАКИМ IMPORT
 const { wrapper } = require("../redux/store"); //  ТОЛЬКО ТАКОЙ IMPORT И ТОЛЬКО  после AbortController
 
-const App = ({ Component, ...rest }) => {
-  const { store, props } = wrapper.useWrappedStore(rest);
-
-  // const Layout = Component.Layout || (({ children }) => <>{children}</>)
-
-  // return (
-  //   <Provider store={store}>
-  //     {/* <GlobalLayout> */}
-  //     <Layout>
-  //       <Component {...props.pageProps} />
-  //     </Layout>
-  //     {/* </GlobalLayout> */}
-  //   </Provider>
-  // );
-
+const MyApp = ({ Component, ...rest }) => {
   
+  // const { store, props } = wrapper.useWrappedStore(rest);
+  const result = wrapper.useWrappedStore(rest);
+
   const getLayout = Component.getLayout || ((page) => page);
-  
-   return (
-    <Provider store={store}>
+
+  return (
+    <Provider store={result.store}>
       <GlobalLayout>
-        { getLayout(<Component {...props.pageProps} />) }
+        {getLayout(<Component {...result.props.pageProps} />)}
       </GlobalLayout>
       <GlobalStyles />
     </Provider>
   );
-
-  // return (
-  //   <Provider store={store}>
-  //     <div style={{height:"100px", background: "teal"}} >HEADER</div>
-  //     <Component {...props.pageProps} />
-  //     <div style={{height:"100px", background: "teal"}} >FOOTER</div>
-  //   </Provider>
-  // );
 };
 
-export default App;
+// MyApp.getInitialProps = wrapper.getInitialAppProps(
+//   (store) => async (appCtx) => {
+    
+//     store.dispatch(setInitialCounter(10));
+
+//     // const ddd = await fetch('https://pokeapi.co/api/v2/pokemon/bulbasaur');
+//     // const data = await ddd.json()
+//     // console.log("data:========================", data);
+
+//     const childrenGip = await App.getInitialProps(appCtx);
+
+//     return {
+//       pageProps: {
+//         ...childrenGip.pageProps,
+//         id: 42,
+//         initialReduxState: store.getState(),
+//       },
+//     };
+//   }
+// );
+
+export default MyApp;
 
 // const EmptyLayout = ({ children }) => <>{children}</>;
 
