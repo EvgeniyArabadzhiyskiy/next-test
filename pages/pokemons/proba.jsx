@@ -9,7 +9,7 @@ import {
   getAllTransactions,
   useDeleteTransactionMutation,
   useGetAllTransactionsQuery,
-  getRunningQueriesThunk,
+  // getRunningQueriesThunk,
 } from "@/redux/walletApi";
 
 import {
@@ -17,29 +17,36 @@ import {
   setInitialTransactions,
   setNextPage,
 } from "@/redux/transactions-slice";
-
+import { getPokemonByName, getRunningQueriesThunk } from "@/redux/pokemonApi";
+import { setInitialCounter } from "@/redux/counter/counter";
 
 export const getStaticProps = wrapper.getStaticProps(
   (store) => async () => {
-    const { pageNum } = store.getState().transactions;
+    // const { pageNum } = store.getState().transactions;
 
-    store.dispatch(getAllTransactions.initiate({ pageNum }));
-    const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    // store.dispatch(getAllTransactions.initiate({ pageNum }));
+    // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
-    store.dispatch(setInitialTransactions(result.data));
+    // store.dispatch(setInitialTransactions(result.data));
+
+    store.dispatch(setInitialCounter(10));
 
     return { props: {} };
   }
 );
 
-const TransactionsList = () => {
+const TransactionsList = ({ ddd }) => {
+  // console.log("TransactionsList  ddd:", ddd);
   const [isSkip, setIsSkip] = useState(true);
-  const { counter } = useSelector(state => state.counter);
+  const { counter } = useSelector((state) => state.counter);
 
   const dispatch = useDispatch();
   const { transactions, pageNum } = useSelector((state) => state.transactions);
 
-  const { data = [] } = useGetAllTransactionsQuery({ pageNum },{ skip: isSkip });
+  const { data = [] } = useGetAllTransactionsQuery(
+    { pageNum },
+    { skip: isSkip }
+  );
 
   useEffect(() => {
     if (data.length === 0) return;
@@ -68,10 +75,13 @@ const TransactionsList = () => {
 
       <div>
         <h1>Transactions</h1>
+        {/* <h2>{ddd}</h2> */}
 
         <Link href="/"> ← Back to home</Link>
-        
-        <button type="button" onClick={onNextPage}>Next Page</button>
+
+        <button type="button" onClick={onNextPage}>
+          Next Page
+        </button>
       </div>
 
       <Counter />
@@ -82,7 +92,10 @@ const TransactionsList = () => {
             return (
               <li key={item._id}>
                 <span>{item.category}</span>
-                <button type="button" onClick={() => deleteTransaction(item._id)}>
+                <button
+                  type="button"
+                  onClick={() => deleteTransaction(item._id)}
+                >
                   DELETE
                 </button>
               </li>
@@ -94,6 +107,40 @@ const TransactionsList = () => {
 };
 
 export default TransactionsList;
+
+
+
+// TransactionsList.getInitialProps = wrapper.getInitialPageProps(
+//   (store) => async () => {
+//     // console.log("store:", store);
+//     // const { pageNum } = store.getState().transactions;
+//     const { counter } = store.getState().counter;
+//     console.log("counter:================", counter);
+
+//     // console.log("+++++++++++++++++++++++++++++++++++++++");
+
+//     // store.dispatch(getAllTransactions.initiate({ pageNum: 1 }));
+//     // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+
+//     // store.dispatch(getPokemonByName.initiate('bulbasaur'));
+//     // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+//     // console.log("result++++++++++++++++++++++++++++++++++++++:", result);
+
+//     // // console.log("store.getState().transactions:", store.getState().transactions);
+//     // // store.dispatch(setInitialTransactions(result?.data));
+
+//     store.dispatch(setInitialCounter(10));
+
+//     // return { ddd: result };
+//     //return  {ddd: store.getState().transactions}
+
+//   //   const res = await fetch('https://pokeapi.co/api/v2/pokemon/bulbasaur')
+//   // const json = await res.json()
+//   // console.log("NAME", json);
+
+//   return { ddd: 'pageNum' }
+//   }
+// );
 
 //================================================================
 
