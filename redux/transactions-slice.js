@@ -24,22 +24,28 @@ const transactionsSlice = createSlice({
 
   extraReducers: (builder) => {
     builder.addCase(HYDRATE, (state, action) => {
-      // console.log("action:", action.payload.transactions.transactions);
-      return {
+      let nextState = {
         ...state,
         ...action.payload.transactions,
       };
+
+      if (state.transactions.length > 0) {
+        nextState.transactions = state.transactions;
+        nextState.pageNum = state.pageNum;
+        // nextState = state
+      }
+
+      return nextState;
     });
   },
 
-  // extraReducers: {
-  //   [HYDRATE]: (state, action) => {
-  //     // console.log("action:", action.payload.transactions.transactions);
+  // extraReducers: (builder) => {
+  //   builder.addCase(HYDRATE, (state, action) => {
   //     return {
   //       ...state,
   //       ...action.payload.transactions,
   //     };
-  //   },
+  //   });
   // },
 });
 
