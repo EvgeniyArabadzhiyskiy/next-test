@@ -5,7 +5,10 @@ const counterSlise = createSlice({
   name: "counter",
 
   initialState: {
-    counter: 0,
+    counter: {
+      amount: 0,
+      type: "init",
+    },
   },
 
   reducers: {
@@ -14,38 +17,33 @@ const counterSlise = createSlice({
     },
 
     incrementCounter: (state) => {
-      state.counter += 1;
+      state.counter.amount += 1;
     },
 
     decrementCounter: (state) => {
-      state.counter -= 1;
+      state.counter.amount -= 1;
     },
   },
 
   extraReducers: (builder) => {
     builder.addCase(HYDRATE, (state, action) => {
-      // console.log("builder.addCase  state:", state.counter);
-      // console.log("action:", action.payload.counter.counter === 0);
-
       const nextState = {
         ...state,
         ...action.payload.counter,
       };
+
+      if (state.counter.type === "start") {
+        nextState.counter = state.counter;
+      }
       
-      // console.log("builder.addCase  nextState:", nextState);
-
-      // if (nextState.counter === 10) {
-      //   nextState.counter = state.counter
-        
-      // }
-
+      return nextState;
 
       // if (action.payload.counter.counter === 0) delete action.payload.counter.counter;
-      return nextState;
     });
   },
 });
 
-export const { incrementCounter, decrementCounter, setInitialCounter } = counterSlise.actions;
+export const { incrementCounter, decrementCounter, setInitialCounter } =
+  counterSlise.actions;
 
 export const counterReduser = counterSlise.reducer;
