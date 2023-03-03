@@ -32,8 +32,14 @@ const MyApp = ({ Component, ...rest }) => {
 
 // MyApp.getInitialProps = wrapper.getInitialAppProps(
 //   (store) => async (appCtx) => {
+//     // console.log("appCtx:========================", appCtx.Component);
+
+//     // const propData = appCtx.Component.getInitialProps
+//     // ? await appCtx.Component.getInitialProps({...appCtx.ctx, store}) 
+//     // : {}
+//     // console.log("propData:", propData);
     
-//     store.dispatch(setInitialCounter(10));
+//     // store.dispatch(setInitialCounter(10));
 
 //     // const ddd = await fetch('https://pokeapi.co/api/v2/pokemon/bulbasaur');
 //     // const data = await ddd.json()
@@ -45,17 +51,36 @@ const MyApp = ({ Component, ...rest }) => {
 //       pageProps: {
 //         ...childrenGip.pageProps,
 //         id: 42,
-//         initialReduxState: store.getState(),
 //       },
 //     };
+
+    
 //   }
 // );
 
 export default MyApp;
 
-// const EmptyLayout = ({ children }) => <>{children}</>;
+//=============================================================
 
-// function App({ Component, pageProps }) {
-//   return <Component {...pageProps} />
+// import "../styles/globals.css";
+// import App from "next/app";
+// import { wrapper } from "@/redux/store";
+
+// function MyApp({ Component, pageProps }) {
+//   return <Component {...pageProps} />;
 // }
-// export default wrapper.withRedux(App);
+
+// MyApp.getInitialProps = wrapper.getInitialAppProps(
+//   (store) => async (appCtx) => {
+//     const childrenGip = await App.getInitialProps(appCtx);
+
+//     return {
+//       pageProps: {
+//         ...childrenGip.pageProps,
+//         id: 42,
+//       },
+//     };
+//   }
+// );
+
+// export default wrapper.withRedux(MyApp);
