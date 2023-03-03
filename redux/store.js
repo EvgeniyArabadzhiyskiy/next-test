@@ -17,28 +17,17 @@
 
 // const hydrateReducer = (state, action) => {
 //   // console.log("hydrateReducer  state:=================================", action.payload);
-  
+
 //   if (action.type === HYDRATE) {
 //     let nextState = {
 //       ...state,
 //       ...action.payload,
-//       // counter: {
-//       //   counter : state.counter.counter
-//       // },
-
-//       // transactions: action.payload.transactions,
 //     };
-//     // console.log("hydrateReducer  state.counter.counter:", !!state.transactions.transactions.length === 0);
 
-//     // if (state.counter.counter) {
-//     //   console.log("Hello");
-//     //   nextState.counter.counter = state.counter.counter
+//     // if (state?.counter.counter.type === "start") {
+//     //   nextState.counter = state.counter;
 //     // }
-
-//     // if (state.transactions.transactions.length === 0) {
-//     //   console.log("Hello");
-//     //   nextState.transactions.transactions = state.transactions.transactions
-//     // }
+ 
 //     return nextState;
 //   } else {
 //     return rootReducer(state, action);
@@ -49,22 +38,35 @@
 //   let middleware = [pokemonApi.middleware, walletApi.middleware];
 
 //   const store = configureStore({
-//     reducer: hydrateReducer,
+//     reducer: (state, action) => {
+//       if (action.type === HYDRATE) {
+//         let nextState = {
+//           ...state,
+//           ...action.payload,
+//         };
+
+//         if (state?.counter.counter.type === "start") {
+//           nextState.counter = state.counter;
+//         }
+//         return nextState;
+
+//       } else {
+//         const stateData = rootReducer(state, action)
+//         return stateData;
+//       }
+//     },
+
 //     middleware: (gDM) => gDM().concat(middleware),
 
-//     // middleware: (gDM) => gDM().concat(pokemonApi.middleware, walletApi.middleware),
 //   });
-
 //   return store;
 // };
 
 // export const wrapper = createWrapper(makeStore);
 
-
-
 //===============================================================
 
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
 import { counterReduser } from "./counter/counter";
 import { authReducer } from "./auth/authSlice";
@@ -72,19 +74,26 @@ import { pokemonApi } from "./pokemonApi";
 import { transactionReducer } from "./transactions-slice";
 import { walletApi } from "./walletApi";
 
-export const makeStore = () =>
-  configureStore({
-    reducer: {
-      [pokemonApi.reducerPath]: pokemonApi.reducer,
-      [walletApi.reducerPath]: walletApi.reducer,
+const rootReducer = combineReducers({
+  auth: authReducer,
+  counter: counterReduser,
+  transactions: transactionReducer,
+  [walletApi.reducerPath]: walletApi.reducer,
+  [pokemonApi.reducerPath]: pokemonApi.reducer,
+});
 
-      transactions: transactionReducer,
-      counter: counterReduser,
-      auth: authReducer,
+export const makeStore = () => {
+  const store = configureStore({
+    reducer: (state, action) => {
+      return rootReducer(state, action)
     },
 
-    middleware: (gDM) => gDM().concat(pokemonApi.middleware, walletApi.middleware),
+    middleware: (gDM) =>
+      gDM().concat(pokemonApi.middleware, walletApi.middleware),
   });
+
+  return store;
+};
 
 export const wrapper = createWrapper(makeStore);
 
