@@ -38,15 +38,6 @@ const transactionsSlice = createSlice({
       return nextState;
     });
   },
-
-  // extraReducers: (builder) => {
-  //   builder.addCase(HYDRATE, (state, action) => {
-  //     return {
-  //       ...state,
-  //       ...action.payload.transactions,
-  //     };
-  //   });
-  // },
 });
 
 export const {
