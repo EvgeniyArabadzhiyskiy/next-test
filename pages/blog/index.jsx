@@ -27,6 +27,8 @@ import { useSelector } from "react-redux";
 // }
 
 const Blog = (props) => {
+  // console.log("Blog  props:", props);
+  
   const router = useRouter();
 
   const { isLoggedIn } = useSelector((st) => st.auth);
@@ -55,7 +57,7 @@ const Blog = (props) => {
       <Link href="/">GO HOME</Link>
       <Counter />
 
-      <h3>{props.id}</h3>
+      {/* <h3>{props.id}</h3> */}
 
       <button type="button" onClick={onProba}>PROBA</button>
     </>
