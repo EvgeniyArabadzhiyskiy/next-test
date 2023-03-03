@@ -20,19 +20,19 @@ import {
 
 import { setInitialCounter } from "@/redux/counter/counter";
 
-export const getStaticProps = wrapper.getStaticProps(
-  (store) => async () => {
-    const { pageNum } = store.getState().transactions;
+// export const getStaticProps = wrapper.getStaticProps(
+//   (store) => async () => {
+//     const { pageNum } = store.getState().transactions;
 
-    store.dispatch(getAllTransactions.initiate({ pageNum }));
-    const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+//     store.dispatch(getAllTransactions.initiate({ pageNum }));
+//     const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
-    store.dispatch(setInitialTransactions(result.data));
-    store.dispatch(setInitialCounter({amount:10, type: 'start'}));
+//     store.dispatch(setInitialTransactions(result.data));
+//     store.dispatch(setInitialCounter({amount:10, type: 'start'}));
 
-    return { props: {} };
-  }
-);
+//     return { props: {} };
+//   }
+// );
 
 const TransactionsList = () => {
   const [isSkip, setIsSkip] = useState(true);
@@ -105,29 +105,31 @@ export default TransactionsList;
 
 
 
-// TransactionsList.getInitialProps = wrapper.getInitialPageProps(
-//   (store) => async () => {
-//    const { pageNum } = store.getState().transactions;
+TransactionsList.getInitialProps = wrapper.getInitialPageProps(
+  (store) => async () => {
+   const { pageNum } = store.getState().transactions;
 
-//     // store.dispatch(getAllTransactions.initiate({ pageNum: 1 }));
-//     // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+   store.dispatch(setInitialCounter({amount:10, type: 'start'}));
 
-//     // store.dispatch(getPokemonByName.initiate('bulbasaur'));
-//     // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    // store.dispatch(getAllTransactions.initiate({ pageNum: 1 }));
+    // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+
+    // store.dispatch(getPokemonByName.initiate('bulbasaur'));
+    // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
 
-//     // // console.log("store.getState().transactions:", store.getState().transactions);
-//     // // store.dispatch(setInitialTransactions(result?.data));
+    // // console.log("store.getState().transactions:", store.getState().transactions);
+    // // store.dispatch(setInitialTransactions(result?.data));
 
-//     // return { ddd: result };
+    // return { ddd: result };
 
-//     // const res = await fetch('https://pokeapi.co/api/v2/pokemon/bulbasaur')
-//     // const json = await res.json()
-//     // console.log("NAME", json);
+    // const res = await fetch('https://pokeapi.co/api/v2/pokemon/bulbasaur')
+    // const json = await res.json()
+    // console.log("NAME", json);
 
-//     return { ddd: 'pageNum' }
-//   }
-// );
+    return { ddd: 'pageNum' }
+  }
+);
 
 //================================================================
 
