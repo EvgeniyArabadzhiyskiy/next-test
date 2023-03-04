@@ -60,6 +60,10 @@ const Blog = (props) => {
       {/* <h3>{props.id}</h3> */}
 
       <button type="button" onClick={onProba}>PROBA</button>
+
+    
+      {/* <Link href="/">GO HOME</Link>
+      <Link href="/pokemons/proba">PROBA</Link> */}
     </>
   );
 };
