@@ -10,6 +10,8 @@ import {
 import { makeStore, wrapper } from "@/redux/store";
 import Layout from "@/components/layout";
 import Image from "next/image";
+import mobileImg from "../../../images/mobile.webp";
+import walletImg from "../../../public/ewallet-2.webp";
 
 export async function getStaticPaths() {
   const store = makeStore();
@@ -20,8 +22,6 @@ export async function getStaticPaths() {
   const arrayPath = result.data.map((p) => ({
     params: { name: p.name },
   }));
-
-  // console.log("getStaticPaths  arrayPath", arrayPath);
 
   return {
     paths: arrayPath,
@@ -36,9 +36,9 @@ export const getStaticProps = wrapper.getStaticProps(
     store.dispatch(getPokemonByName.initiate(name));
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
-    return {
-      props: {},
-    };
+    // return {
+    //   props: {},
+    // };
   }
 );
 
@@ -49,16 +49,16 @@ export const getStaticProps = wrapper.getStaticProps(
 //     store.dispatch(getPokemonByName.initiate(name));
 //     await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
-//     return {
-//       props: {},
-//     };
+//     // return {
+//     //   props: {},
+//     // };
 //   }
 // );
 
 export default function PokemonOne() {
   const router = useRouter();
   const name = router.query.name;
-  
+
   const result = useGetPokemonByNameQuery(name);
   const { isLoading, error, data } = result;
   // console.log("PokemonOne  data", data);
@@ -75,14 +75,31 @@ export default function PokemonOne() {
           <>Loading...</>
         ) : data ? (
           <>
+            {/* <Image src={walletImg} alt="mob" /> */}
+
             <h3>{data.species.name}</h3>
             {/* <img src={data.sprites.front_shiny} alt={data.species.name} /> */}
-            <Image
-              src={data.sprites.front_shiny}
-              alt={data.species.name}
-              width={96}
-              height={96}
-            />
+            <div className="image-wrapper">
+              <Image
+                src={data.sprites.front_shiny}
+                alt={data.species.name}
+                // width={96}
+                // height={96}
+                // placeholder="blur"
+                // blurDataURL={data.sprites.front_shiny}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                fill
+              />
+            </div>
+
+            <style jsx>{`
+              .image-wrapper {
+                position: relative;
+                width: 200px;
+                height: 200px;
+                background: tomato;
+              }
+            `}</style>
           </>
         ) : null}
       </article>
