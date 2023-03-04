@@ -32,7 +32,7 @@ export const pokemonApi = createApi({
 
     getPokemonList: builder.query({
       query: (item) => {
-        console.log("item", item);
+        // console.log("item", item);
         // console.log("World");
 
         return `pokemon?limit=10`;
