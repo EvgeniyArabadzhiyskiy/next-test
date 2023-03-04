@@ -20,19 +20,19 @@ import {
 
 import { setInitialCounter } from "@/redux/counter/counter";
 
-// export const getStaticProps = wrapper.getStaticProps(
-//   (store) => async () => {
-//     const { pageNum } = store.getState().transactions;
+export const getStaticProps = wrapper.getStaticProps(
+  (store) => async () => {
+    const { pageNum } = store.getState().transactions;
 
-//     store.dispatch(getAllTransactions.initiate({ pageNum }));
-//     const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    store.dispatch(getAllTransactions.initiate({ pageNum }));
+    const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
-//     store.dispatch(setInitialTransactions(result.data));
-//     store.dispatch(setInitialCounter({amount:10, type: 'start'}));
+    store.dispatch(setInitialTransactions(result.data));
+    store.dispatch(setInitialCounter({amount:10, type: 'start'}));
 
-//     return { props: {} };
-//   }
-// );
+    // return { props: {} };
+  }
+);
 
 const TransactionsList = () => {
   const [isSkip, setIsSkip] = useState(true);
@@ -70,9 +70,9 @@ const TransactionsList = () => {
 
       <div>
         <h1>Transactions</h1>
-        {/* <h2>{ddd}</h2> */}
 
-        <Link href="/"> ← Back to home</Link>
+        <Link href="/"> ← Back to home</Link>{" "}
+        <Link href="/blog">TO BLOG</Link>
 
         <button type="button" onClick={onNextPage}>
           Next Page
@@ -80,6 +80,7 @@ const TransactionsList = () => {
       </div>
 
       <Counter />
+      
 
       <ul className="transactions-list">
         {transactions &&
@@ -105,31 +106,31 @@ export default TransactionsList;
 
 
 
-TransactionsList.getInitialProps = wrapper.getInitialPageProps(
-  (store) => async () => {
-   const { pageNum } = store.getState().transactions;
+// TransactionsList.getInitialProps = wrapper.getInitialPageProps(
+//   (store) => async () => {
+//    const { pageNum } = store.getState().transactions;
 
-   store.dispatch(setInitialCounter({amount:10, type: 'start'}));
+//    store.dispatch(setInitialCounter({amount:10, type: 'start'}));
 
-    // store.dispatch(getAllTransactions.initiate({ pageNum: 1 }));
-    // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+//     // store.dispatch(getAllTransactions.initiate({ pageNum: 1 }));
+//     // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
-    // store.dispatch(getPokemonByName.initiate('bulbasaur'));
-    // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+//     // store.dispatch(getPokemonByName.initiate('bulbasaur'));
+//     // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
 
-    // // console.log("store.getState().transactions:", store.getState().transactions);
-    // // store.dispatch(setInitialTransactions(result?.data));
+//     // // console.log("store.getState().transactions:", store.getState().transactions);
+//     // // store.dispatch(setInitialTransactions(result?.data));
 
-    // return { ddd: result };
+//     // return { ddd: result };
 
-    // const res = await fetch('https://pokeapi.co/api/v2/pokemon/bulbasaur')
-    // const json = await res.json()
-    // console.log("NAME", json);
+//     // const res = await fetch('https://pokeapi.co/api/v2/pokemon/bulbasaur')
+//     // const json = await res.json()
+//     // console.log("NAME", json);
 
-    return { ddd: 'pageNum' }
-  }
-);
+//     return { ddd: 'pageNum' }
+//   }
+// );
 
 //================================================================
 
@@ -228,7 +229,7 @@ TransactionsList.getInitialProps = wrapper.getInitialPageProps(
 // import { useDeleteTransactionMutation } from "@/redux/walletApi";
 
 // import axios from "axios";
-// const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY3NjY2MzEzMSwiZXhwIjoxNjc3ODcyNzMxfQ.W9CvqyVwufke2XcMuWvPBMBJwxLkhYao1TZnJr6YfMg`;
+// const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY3Nzk0NTcxOSwiZXhwIjoxNjc5MTU1MzE5fQ.QSy4e8Qtlmu4tKzK9-i5WfRUhDSrdGjdRx7Cnfb3sac`;
 // axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
 // export const getStaticProps = async () => {
@@ -309,4 +310,4 @@ TransactionsList.getInitialProps = wrapper.getInitialPageProps(
 
 // export default TransactionsList;
 
-//========================================================
+// ========================================================
