@@ -18,6 +18,7 @@ const counterSlise = createSlice({
 
     incrementCounter: (state) => {
       state.counter.amount += 1;
+      state.counter.type = "start"
     },
 
     decrementCounter: (state) => {
