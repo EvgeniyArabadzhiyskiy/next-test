@@ -1,23 +1,24 @@
 import Head from "next/head";
 import Link from "next/link";
 import { wrapper } from "@/redux/store";
-// import {
-//   getPokemonList,
-//   getRunningQueriesThunk,
-//   useGetPokemonListQuery,
-// } from "@/redux/pokemonApi";
+import {
+  getPokemonList,
+  getRunningQueriesThunk,
+  useGetPokemonListQuery,
+} from "@/redux/pokemonApi";
 import { useRouter } from "next/router";
 import PokemonPageLayout from "@/components/PokemonPageLayout";
 import { useSelector } from "react-redux";
 
 import { useEffect, useState } from "react";
 
-import {
-  getAllTransactions,
-  useDeleteTransactionMutation,
-  useGetAllTransactionsQuery,
-  getRunningQueriesThunk,
-} from "@/redux/walletApi";
+// import {
+//   getAllTransactions,
+//   useDeleteTransactionMutation,
+//   useGetAllTransactionsQuery,
+//   getRunningQueriesThunk,
+// } from "@/redux/walletApi";
+
 import axios from "axios";
 import Counter from "@/components/Counter/Counter";
 
@@ -43,28 +44,28 @@ import Counter from "@/components/Counter/Counter";
 //   };
 // });
 
-// export const getStaticProps = wrapper.getStaticProps((store) => async () => {
-
-//   const { counter } = store.getState().counter  // Для примера
-
-//   store.dispatch(getPokemonList.initiate(counter));
-//   await Promise.all(store.dispatch(getRunningQueriesThunk()));
-
-//   return {
-//     props: {},
-//   };
-// });
-
 export const getStaticProps = wrapper.getStaticProps((store) => async () => {
-  store.dispatch(getAllTransactions.initiate());
-  const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+
+  const { counter } = store.getState().counter  // Для примера
+
+  store.dispatch(getPokemonList.initiate(counter));
+  await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
   return {
-    props: {
-      response: result.data
-    },
+    props: {},
   };
 });
+
+// export const getStaticProps = wrapper.getStaticProps((store) => async () => {
+//   store.dispatch(getAllTransactions.initiate());
+//   const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+
+//   return {
+//     props: {
+//       response: result.data
+//     },
+//   };
+// });
 
 // const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY3NjY2MzEzMSwiZXhwIjoxNjc3ODcyNzMxfQ.W9CvqyVwufke2XcMuWvPBMBJwxLkhYao1TZnJr6YfMg`;
 // axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -81,7 +82,7 @@ const Pokemons = ({}) => {
 
   // const { data: pokemons, isError, isLoading } = response
 
-  // const { counter } = useSelector((st) => st.counter);
+  const { counter } = useSelector((st) => st.counter);
 
   // const [pokemons, setPokemons] = useState(null);
   // console.log("Pokemons  pokemons", pokemons);
@@ -98,7 +99,7 @@ const Pokemons = ({}) => {
 
  
 
-  const { data: result } = useGetAllTransactionsQuery(undefined,{});
+  // const { data: result } = useGetAllTransactionsQuery(undefined,{});
  
 
   // const [result, setTrans] = useState(data);
@@ -106,13 +107,13 @@ const Pokemons = ({}) => {
 
 
 
-  const [deleteTrRTKQ] = useDeleteTransactionMutation();
+  // const [deleteTrRTKQ] = useDeleteTransactionMutation();
 
   const deleteTrans = (id) => {
-    deleteTrRTKQ(id);
+    // deleteTrRTKQ(id);
   };
 
-  // const { data: pokemons = [], isLoading } = useGetPokemonListQuery(counter);
+  const { data: pokemons = [], isLoading } = useGetPokemonListQuery(counter);
   // console.log("Pokemons  pokemons", pokemons);
 
   // console.log("Pokemons  result", pokemons?.results);
@@ -134,23 +135,29 @@ const Pokemons = ({}) => {
         <h1>Pokemons</h1>
         {/* <Counter /> */}
 
-        {/* <ul>
+        <ul>
           {pokemons &&
             pokemons.map((pokemon) => {
               return (
-                // <Link key={pokemon.name} href={`/pokemons/new/${pokemon.name}`}>
-                // <Link  key={pokemon.name} href={`/pokemons/details?name=${pokemon.name}`}>
-                  <li key={pokemon.name} onClick={() => deletePokemon(pokemon.name)} >{pokemon.name}</li>
-                // </Link>
+                <Link 
+                key={pokemon.name} 
+                // as={`/pokemons/new/${pokemon.name}`}
+                href={`/pokemons/new/${pokemon.name}`}
+                >
+                 {/* <Link  key={pokemon.name} href={`/pokemons/details?name=${pokemon.name}`}> */}
+                   <li key={pokemon.name} 
+                      // onClick={() => deletePokemon(pokemon.name)}
+                  >{pokemon.name}</li>
+                </Link>
               );
             })}
-        </ul> */}
+        </ul>
 
         <Link href="/"> ← Back to home</Link>
         <Link href="/pokemons/statistic">Go Statistic</Link>
       </div>
 
-      <ul>
+      {/* <ul>
         {result &&
           result.map((pokemon) => {
             return (
@@ -162,7 +169,7 @@ const Pokemons = ({}) => {
               </li>
             );
           })}
-      </ul>
+      </ul> */}
     </>
   );
 };
