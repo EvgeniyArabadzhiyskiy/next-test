@@ -1,12 +1,16 @@
 import { logOut } from "@/redux/auth/authSlice";
+import { useUserLogoutMutation } from "@/redux/walletApiService/userApi";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 
 const GlobalLayout = ({ children }) => {
-  const dispatch = useDispatch();
-  
-  const onLogout = () => {
-    dispatch(logOut());
+  // const dispatch = useDispatch();
+
+  const [userLogoutRTKQ] = useUserLogoutMutation();
+
+  const onLogout = async () => {
+    // dispatch(logOut());
+    userLogoutRTKQ();
   };
   return (
     <>
