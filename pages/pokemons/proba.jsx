@@ -10,7 +10,7 @@ import {
   useDeleteTransactionMutation,
   useGetAllTransactionsQuery,
   getRunningQueriesThunk,
-} from "@/redux/walletApi";
+} from "@/redux/walletApiService/walletApi";
 
 import {
   getTransactions,
@@ -20,28 +20,40 @@ import {
 
 import { setInitialCounter } from "@/redux/counter/counter";
 
-export const getStaticProps = wrapper.getStaticProps(
-  (store) => async () => {
-    const { pageNum } = store.getState().transactions;
+export const getStaticProps = wrapper.getStaticProps((store) => async () => {
+  const { pageNum } = store.getState().transactions;
+  const { token } = store.getState().auth;
+  console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
 
-    store.dispatch(getAllTransactions.initiate({ pageNum }));
-    const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+  store.dispatch(getAllTransactions.initiate({ pageNum }));
+  const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
-    store.dispatch(setInitialTransactions(result.data));
-    store.dispatch(setInitialCounter({amount:10, type: 'start'}));
-
-    // return { props: {} };
+  if (result.isError) {
+    const errorMessage = result.error;
+    return { props: {error: result.error} };
   }
-);
 
-const TransactionsList = () => {
+  store.dispatch(setInitialTransactions(result.data));
+  store.dispatch(setInitialCounter({ amount: 10, type: "start" }));
+
+  // return { props: {} };
+});
+
+const TransactionsList = ({error}) => {
+  if (error) {
+    console.log("TransactionsList  error:", error);
+  }
+  
   const [isSkip, setIsSkip] = useState(true);
   const { counter } = useSelector((state) => state.counter);
 
   const dispatch = useDispatch();
   const { transactions, pageNum } = useSelector((state) => state.transactions);
 
-  const { data = [] } = useGetAllTransactionsQuery({ pageNum },{ skip: isSkip });
+  const { data = [] } = useGetAllTransactionsQuery(
+    { pageNum },
+    { skip: isSkip }
+  );
 
   useEffect(() => {
     if (data.length === 0) return;
@@ -70,17 +82,13 @@ const TransactionsList = () => {
 
       <div>
         <h1>Transactions</h1>
-
-        <Link href="/"> ← Back to home</Link>{" "}
-        <Link href="/blog">TO BLOG</Link>
-
+        <Link href="/"> ← Back to home</Link> <Link href="/blog">TO BLOG</Link>
         <button type="button" onClick={onNextPage}>
           Next Page
         </button>
       </div>
 
       <Counter />
-      
 
       <ul className="transactions-list">
         {transactions &&
@@ -104,8 +112,6 @@ const TransactionsList = () => {
 
 export default TransactionsList;
 
-
-
 // TransactionsList.getInitialProps = wrapper.getInitialPageProps(
 //   (store) => async () => {
 //    const { pageNum } = store.getState().transactions;
@@ -117,7 +123,6 @@ export default TransactionsList;
 
 //     // store.dispatch(getPokemonByName.initiate('bulbasaur'));
 //     // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
-
 
 //     // // console.log("store.getState().transactions:", store.getState().transactions);
 //     // // store.dispatch(setInitialTransactions(result?.data));
