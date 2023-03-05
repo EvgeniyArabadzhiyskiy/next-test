@@ -72,12 +72,14 @@ import { counterReduser } from "./counter/counter";
 import { authReducer } from "./auth/authSlice";
 import { pokemonApi } from "./pokemonApi";
 import { transactionReducer } from "./transactions-slice";
-import { walletApi } from "./walletApi";
+import { walletApi } from "./walletApiService/walletApi";
+import { userApi } from "./walletApiService/userApi";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   counter: counterReduser,
   transactions: transactionReducer,
+  [userApi.reducerPath]: userApi.reducer,
   [walletApi.reducerPath]: walletApi.reducer,
   [pokemonApi.reducerPath]: pokemonApi.reducer,
 });
@@ -89,7 +91,7 @@ export const makeStore = () => {
     },
 
     middleware: (gDM) =>
-      gDM().concat(pokemonApi.middleware, walletApi.middleware),
+      gDM().concat(userApi.middleware,  pokemonApi.middleware, walletApi.middleware),
   });
 
   return store;
