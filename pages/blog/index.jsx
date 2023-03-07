@@ -31,7 +31,9 @@ const Blog = (props) => {
   
   const router = useRouter();
 
-  const { isLoggedIn } = useSelector((st) => st.auth);
+  const authState = useSelector((st) => st.auth);
+  // console.log("Blog  authState:", authState);
+  
   // const { transactions, pageNum } = useSelector((state) => state.transactions);
   // console.log("Blog  transactions:", transactions);
 
@@ -57,7 +59,7 @@ const Blog = (props) => {
       <Link href="/">GO HOME</Link>
       <Counter />
 
-      {/* <h3>{props.id}</h3> */}
+      <h3>{props.id}</h3>
 
       <button type="button" onClick={onProba}>PROBA</button>
 
