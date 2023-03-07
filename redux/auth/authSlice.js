@@ -7,7 +7,7 @@ const authSlice = createSlice({
 
   initialState: {
     user: { firstName: null, email: null, balance: 0 },
-    token: global.localStorage?.getItem("token") || null,
+    token:  null,
     isLoggedIn: false,
   },
 
@@ -19,22 +19,27 @@ const authSlice = createSlice({
     logOut: (state, action) => {
       state.isLoggedIn = false;
     },
+
+    setToken: (state, action) => {
+      // console.log("action:", action.payload);
+      state.token = action.payload
+    }
   },
 
   extraReducers: (builder) => {
     builder
-      .addCase(HYDRATE, (state, action) => {
-        let nextState = {
-          ...state,
-          ...action.payload.auth,
-        };
+      // .addCase(HYDRATE, (state, action) => {
+      //   let nextState = {
+      //     ...state,
+      //     ...action.payload.auth,
+      //   };
 
-        if (state.token) {
-          nextState = state;
-        }
+      //   // if (state.token) {
+      //   //   nextState = state;
+      //   // }
 
-        return nextState;
-      })
+      //   return nextState;
+      // })
       .addMatcher(
         userApi.endpoints.userLogin.matchFulfilled,
         (state, action) => {
@@ -65,6 +70,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logIn, logOut } = authSlice.actions;
+export const { logIn, logOut, setToken } = authSlice.actions;
 
 export const authReducer = authSlice.reducer;
