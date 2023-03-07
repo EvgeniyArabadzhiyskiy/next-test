@@ -39,10 +39,11 @@ export const getStaticProps = wrapper.getStaticProps((store) => async () => {
   // return { props: {} };
 });
 
-const TransactionsList = ({error}) => {
-  if (error) {
-    console.log("TransactionsList  error:", error);
-  }
+const TransactionsList = ({ id}) => {
+  // console.log("TransactionsList  id:", id);
+  // if (error) {
+  //   console.log("TransactionsList  error:", error);
+  // }
   
   const [isSkip, setIsSkip] = useState(true);
   const { counter } = useSelector((state) => state.counter);
