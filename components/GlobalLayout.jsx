@@ -11,6 +11,8 @@ const GlobalLayout = ({ children }) => {
   const onLogout = async () => {
     // dispatch(logOut());
     userLogoutRTKQ();
+
+    document.cookie = `authToken=; max-age=-1`
   };
   return (
     <>
