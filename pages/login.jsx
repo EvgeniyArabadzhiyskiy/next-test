@@ -10,14 +10,14 @@ import {
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
-export const getStaticProps = wrapper.getStaticProps((store) => async () => {
+// export const getStaticProps = wrapper.getStaticProps((store) => async () => {
   
-  const credentials = { email: "user100@mail.com", password: "a123456" };
-  store.dispatch(userLogin.initiate(credentials));
-  const [result] = await Promise.all(store.dispatch(getRunningMutationsThunk()));
-  // console.log("getStaticProps  result:", result);
-  // console.log("getStaticProps  store:", store.getState().auth);
-});
+//   const credentials = { email: "user100@mail.com", password: "a123456" };
+//   store.dispatch(userLogin.initiate(credentials));
+//   const [result] = await Promise.all(store.dispatch(getRunningMutationsThunk()));
+//   // console.log("getStaticProps  result:", result);
+//   // console.log("getStaticProps  store:", store.getState().auth);
+// });
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const LoginPage = () => {
 
     // dispatch(logIn());
 
-    // document.cookie = "goit=djon4292; max-age=60";
+    document.cookie = `authToken=${currentUser.data.token}; max-age=${30*24*60*60}`;
     // const cookieValue = document.cookie
     //   .split("; ")
     //   .find((row) => row.startsWith("goit="))
