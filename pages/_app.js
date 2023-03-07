@@ -35,6 +35,7 @@ import App from "next/app";
 import GlobalLayout from "@/components/GlobalLayout";
 import { GlobalStyles } from "@/styles/globalStyles";
 import AbortController from "abort-controller";
+import { setToken } from "@/redux/auth/authSlice";
 
 globalThis.AbortController = AbortController;
 const { wrapper } = require("../redux/store");
@@ -50,17 +51,51 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
+MyApp.getInitialProps = wrapper.getInitialAppProps(
+  (store) => async (appCtx) => {
+
+    let userToken = null
+
+    if (appCtx.ctx.req) {
+      const authToken = appCtx.ctx.req?.cookies.authToken;
+      // console.log("authToken&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&:", authToken);
+      userToken = authToken
+
+    } 
+    else {
+      const cookieValue = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("authToken="))
+        ?.split("=")[1];
+      // console.log("cookieValue:", cookieValue);
+
+      userToken = cookieValue
+    }
+
+    if (typeof window !== "undefined") {
+      // console.log("Hello window");
+      // const cookieValue = document.cookie
+      //   .split("; ")
+      //   .find((row) => row.startsWith("tokenAuth="))
+      //   ?.split("=")[1];
+      // console.log("cookieValue:!!!!!!!!!!!!!!!!!!!!!", cookieValue);
+      // store.dispatch(setToken(cookieValue))
+    }
+
+    store.dispatch(setToken(userToken));
+
+    const state = store.getState();
+    console.log("state:", state.auth);
+
+    // const childrenGip = await App.getInitialProps(appCtx);
+
+    return {
+      pageProps: {
+        // ...childrenGip.pageProps,
+        id: 42,
+      },
+    };
+  }
+);
+
 export default wrapper.withRedux(MyApp);
-
-// MyApp.getInitialProps = wrapper.getInitialAppProps(
-//   (store) => async (appCtx) => {
-//     const childrenGip = await App.getInitialProps(appCtx);
-
-//     return {
-//       pageProps: {
-//         ...childrenGip.pageProps,
-//         id: 42,
-//       },
-//     };
-//   }
-// );
