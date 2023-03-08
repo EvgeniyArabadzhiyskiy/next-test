@@ -53,6 +53,7 @@ function MyApp({ Component, pageProps }) {
 
 MyApp.getInitialProps = wrapper.getInitialAppProps(
   (store) => async (appCtx) => {
+  // console.log("appCtx:", !!appCtx.ctx.req);
 
     let userToken = null
 
@@ -62,36 +63,27 @@ MyApp.getInitialProps = wrapper.getInitialAppProps(
       userToken = authToken
 
     } 
-    else {
-      const cookieValue = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("authToken="))
-        ?.split("=")[1];
-      // console.log("cookieValue:", cookieValue);
+    // else {
+    //   const cookieValue = document.cookie
+    //     .split("; ")
+    //     .find((row) => row.startsWith("authToken="))
+    //     ?.split("=")[1];
+    //   console.log("cookieValue:", cookieValue);
 
-      userToken = cookieValue
-    }
+    //   userToken = cookieValue
+    // }
 
-    if (typeof window !== "undefined") {
-      // console.log("Hello window");
-      // const cookieValue = document.cookie
-      //   .split("; ")
-      //   .find((row) => row.startsWith("tokenAuth="))
-      //   ?.split("=")[1];
-      // console.log("cookieValue:!!!!!!!!!!!!!!!!!!!!!", cookieValue);
-      // store.dispatch(setToken(cookieValue))
-    }
 
-    store.dispatch(setToken(userToken));
+    store.dispatch(setToken(userToken || null));
 
-    const state = store.getState();
-    console.log("state:", state.auth);
+    // const state = store.getState();
+    // console.log("state:", state.auth);
 
-    // const childrenGip = await App.getInitialProps(appCtx);
+    const childrenGip = await App.getInitialProps(appCtx);
 
     return {
       pageProps: {
-        // ...childrenGip.pageProps,
+        ...childrenGip.pageProps,
         id: 42,
       },
     };
