@@ -20,10 +20,31 @@ import {
 
 import { setInitialCounter } from "@/redux/counter/counter";
 
-export const getStaticProps = wrapper.getStaticProps((store) => async () => {
+
+
+import { setToken } from "@/redux/auth/authSlice";
+
+export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
+  let authSetHeader = context.req.headers["authorization"]
+
+  // if (authSetHeader !== 'undefined') {
+  //   store.dispatch(setToken(authSetHeader))
+  // }
+  
+  // if (authSetHeader === 'undefined') {
+  //   authSetHeader = null
+    
+  //   store.dispatch(setToken(authSetHeader))
+  // } 
+
+  store.dispatch(setToken(authSetHeader || null))
+
+  
+
   const { pageNum } = store.getState().transactions;
-  const { token } = store.getState().auth;
-  console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
+  // const { token } = store.getState().auth;
+  // console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
+
 
   store.dispatch(getAllTransactions.initiate({ pageNum }));
   const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
@@ -44,7 +65,7 @@ const TransactionsList = ({ id}) => {
   // if (error) {
   //   console.log("TransactionsList  error:", error);
   // }
-  
+
   const [isSkip, setIsSkip] = useState(true);
   const { counter } = useSelector((state) => state.counter);
 
