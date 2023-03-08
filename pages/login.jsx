@@ -37,7 +37,7 @@ const LoginPage = () => {
 
     // dispatch(logIn());
 
-    document.cookie = `authToken=${currentUser.data.token}; max-age=${30*24*60*60}`;
+    // document.cookie = `authToken=${currentUser.data.token}; max-age=${30*24*60*60}`;
     // const cookieValue = document.cookie
     //   .split("; ")
     //   .find((row) => row.startsWith("goit="))
