@@ -21,31 +21,35 @@ const authSlice = createSlice({
     },
 
     setToken: (state, action) => {
-      // console.log("action:", action.payload);
+      // console.log("action////////////////////////:", action.payload);
       state.token = action.payload
     }
   },
 
   extraReducers: (builder) => {
     builder
-      // .addCase(HYDRATE, (state, action) => {
-      //   let nextState = {
-      //     ...state,
-      //     ...action.payload.auth,
-      //   };
+      .addCase(HYDRATE, (state, action) => {
+        let nextState = {
+          ...state,
+          ...action.payload.auth,
+        };
 
-      //   // if (state.token) {
-      //   //   nextState = state;
-      //   // }
+        // if (state.token) {
+        //   nextState = state;
+        // }
 
-      //   return nextState;
-      // })
+        return nextState;
+      })
       .addMatcher(
         userApi.endpoints.userLogin.matchFulfilled,
         (state, action) => {
+          // console.log("action:", action.payload);
+          
           state.user = action.payload.user;
           state.token = action.payload.token;
           state.isLoggedIn = true;
+
+          document.cookie = `authToken=${action.payload.token}; max-age=${30*24*60*60}`;
 
           // window.localStorage.setItem("token", action.payload.token);
         }
@@ -56,6 +60,8 @@ const authSlice = createSlice({
           state.user = { name: null, email: null, balance: 0 };
           state.token = null;
           state.isLoggedIn = false;
+
+          document.cookie = `authToken=; max-age=-1`
 
           // window.localStorage.setItem("token", "");
         }
@@ -68,6 +74,7 @@ const authSlice = createSlice({
         }
       );
   },
+        
 });
 
 export const { logIn, logOut, setToken } = authSlice.actions;
