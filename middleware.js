@@ -1,16 +1,39 @@
 import { NextResponse } from "next/server";
+import { setToken } from "./redux/auth/authSlice";
 import { makeStore } from "./redux/store";
 
 export function middleware(request) {
-  // console.log(global.localStorage);
+  // const store = makeStore();
 
-
-
-  // const cookies = request.cookies
-  // console.log("middleware  cookies", !!cookies.get('goit')?.value);
+  const cookies = request.cookies
+  const authToken = cookies.get('authToken')?.value
   
+  const requestHeaders = new Headers(request.headers)
+  
+  if (authToken) {
+    requestHeaders.set("authorization", `${authToken}`)
+  } 
 
-  const response = NextResponse.next();
+  // console.log("middleware  requestHeaders:", requestHeaders);
+  
+  const authHeader = {
+    request: {
+      headers: requestHeaders,
+    },
+  }
+  
+  const response = NextResponse.next(authHeader);
+
+  // const response = NextResponse.next();
+
+  
+  
+  // store.dispatch(setToken(authToken))
+  // const authState = store.getState().auth
+  // console.log("middleware  authState:", authState);
+  
+  // const response = NextResponse.next()
+  
   // response.cookies.set('age', 35)
 
   // const cookies = request.cookies
@@ -38,5 +61,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/blog'],
+  matcher: [ '/blog', '/pokemons/proba'],
 };
