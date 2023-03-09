@@ -2,38 +2,41 @@ import { NextResponse } from "next/server";
 import { setToken } from "./redux/auth/authSlice";
 import { makeStore } from "./redux/store";
 
-export function middleware(request) {
+export async function middleware(request) {
   // const store = makeStore();
 
-  const cookies = request.cookies
-  const authToken = cookies.get('authToken')?.value
-  
-  const requestHeaders = new Headers(request.headers)
-  
-  if (authToken) {
-    requestHeaders.set("authorization", `${authToken}`)
-  } 
+  const cookies = request.cookies;
+  const authToken = cookies.get("authToken")?.value;
 
-  // console.log("middleware  requestHeaders:", requestHeaders);
-  
-  const authHeader = {
-    request: {
-      headers: requestHeaders,
-    },
-  }
-  
-  const response = NextResponse.next(authHeader);
+  // console.log("I am middleware");
 
-  // const response = NextResponse.next();
+  // const requestHeaders = new Headers(request.headers);
 
-  
-  
+  // if (authToken) {
+  //   requestHeaders.set("authorization", `Bearer ${authToken}`);
+  // }
+
+  // const authHeader = {
+  //   request: {
+  //     headers: requestHeaders,
+  //   },
+  // };
+
+  // const response = NextResponse.next(authHeader);
+
+  const response = NextResponse.next();
+
+ 
+
+  return response;
+
+
   // store.dispatch(setToken(authToken))
   // const authState = store.getState().auth
   // console.log("middleware  authState:", authState);
-  
-  // const response = NextResponse.next()
-  
+
+ 
+
   // response.cookies.set('age', 35)
 
   // const cookies = request.cookies
@@ -57,9 +60,13 @@ export function middleware(request) {
   // }
 
   //   const response = NextResponse.next({ //config })
-  return response;
+ 
 }
 
 export const config = {
-  matcher: [ '/blog', '/pokemons/proba'],
+  matcher: ["/:path*"],
 };
+
+// export const config = {
+//   matcher: [ '/blog', '/pokemons/proba'],
+// };
