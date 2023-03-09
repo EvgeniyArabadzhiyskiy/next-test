@@ -8,6 +8,7 @@ import {
   useUserLoginMutation,
 } from "@/redux/walletApiService/userApi";
 import Link from "next/link";
+import { setCookie } from "nookies";
 import { useDispatch, useSelector } from "react-redux";
 
 // export const getStaticProps = wrapper.getStaticProps((store) => async () => {
@@ -21,8 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const { isLoggedIn, user } = useSelector((st) => st.auth);
-  // console.log("LoginPage  user:", user);
+  const { isLoggedIn, user, token } = useSelector((st) => st.auth);
 
   const [userLoginRTKQ] = useUserLoginMutation();
 
@@ -33,7 +33,8 @@ const LoginPage = () => {
     };
 
     const currentUser = await userLoginRTKQ(credentials);
-    // console.log("onLogin  currentUser:", currentUser.data.token);
+
+    setCookie(null, 'authToken', `${currentUser.data.token}`, { maxAge: 30 * 24 * 60 * 60})
 
     // dispatch(logIn());
 
@@ -47,6 +48,7 @@ const LoginPage = () => {
   return (
     <>
       <h1>Login Page</h1>
+      {/* <h2>User {token || 'DEFAULT'}</h2> */}
 
       <button type="button" onClick={onLogin}>
         LOGIN
