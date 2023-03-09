@@ -36,6 +36,11 @@ import GlobalLayout from "@/components/GlobalLayout";
 import { GlobalStyles } from "@/styles/globalStyles";
 import AbortController from "abort-controller";
 import { setToken } from "@/redux/auth/authSlice";
+import {
+  getRunningQueriesThunk,
+  userRefresh,
+} from "@/redux/walletApiService/userApi";
+import { parseCookies } from "nookies";
 
 globalThis.AbortController = AbortController;
 const { wrapper } = require("../redux/store");
@@ -53,16 +58,23 @@ function MyApp({ Component, pageProps }) {
 
 MyApp.getInitialProps = wrapper.getInitialAppProps(
   (store) => async (appCtx) => {
-  // console.log("appCtx:", !!appCtx.ctx.req);
+    // console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", appCtx.ctx.pathname);
 
-    let userToken = null
+    const { authToken } = parseCookies(appCtx.ctx);
+    console.log("authToken:", authToken);
 
-    if (appCtx.ctx.req) {
-      const authToken = appCtx.ctx.req?.cookies.authToken;
-      // console.log("authToken&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&:", authToken);
-      userToken = authToken
+    if (authToken) {
+      console.log("SERVER");
+      store.dispatch(setToken(authToken));
+    }
 
-    } 
+    // let userToken = null;
+
+    // if (appCtx.ctx.req) {
+    //   const authToken = appCtx.ctx.req?.cookies.authToken;
+    //   // console.log("authToken&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&:", authToken);
+    //   userToken = authToken;
+    // }
     // else {
     //   const cookieValue = document.cookie
     //     .split("; ")
@@ -70,11 +82,16 @@ MyApp.getInitialProps = wrapper.getInitialAppProps(
     //     ?.split("=")[1];
     //   console.log("cookieValue:", cookieValue);
 
-    //   userToken = cookieValue
+    //   userToken = cookieValue;
     // }
 
+    // store.dispatch(setToken(userToken || null));
 
-    store.dispatch(setToken(userToken || null));
+    // console.log("hello world");
+
+    // store.dispatch(userRefresh.initiate())
+    // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()))
+    // console.log("result>>>>>>>>>>>>>>>>", result);
 
     // const state = store.getState();
     // console.log("state:", state.auth);
