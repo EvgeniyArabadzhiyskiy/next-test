@@ -1,6 +1,7 @@
 import { logOut } from "@/redux/auth/authSlice";
 import { useUserLogoutMutation } from "@/redux/walletApiService/userApi";
 import Link from "next/link";
+import { destroyCookie } from "nookies";
 import { useDispatch } from "react-redux";
 
 const GlobalLayout = ({ children }) => {
@@ -13,7 +14,7 @@ const GlobalLayout = ({ children }) => {
     await userLogoutRTKQ();
     console.log("LOGOUT");
 
-    // document.cookie = `authToken=; max-age=-1`
+    destroyCookie(null, 'authToken')
   };
   return (
     <>
