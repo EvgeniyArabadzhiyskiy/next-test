@@ -58,4 +58,4 @@ export const {
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = userApi;
 
-export const { userLogin, userLogout } = userApi.endpoints;
+export const { userRegistration, userLogin, userLogout, userRefresh } = userApi.endpoints;
