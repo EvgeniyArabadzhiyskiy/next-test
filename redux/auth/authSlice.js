@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
+import { destroyCookie, setCookie } from "nookies";
 import { userApi } from "../walletApiService/userApi";
 
 const authSlice = createSlice({
@@ -7,7 +8,7 @@ const authSlice = createSlice({
 
   initialState: {
     user: { firstName: null, email: null, balance: 0 },
-    token:  null,
+    token: null,
     isLoggedIn: false,
   },
 
@@ -22,8 +23,8 @@ const authSlice = createSlice({
 
     setToken: (state, action) => {
       // console.log("action////////////////////////:", action.payload);
-      state.token = action.payload
-    }
+      state.token = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -44,14 +45,16 @@ const authSlice = createSlice({
         userApi.endpoints.userLogin.matchFulfilled,
         (state, action) => {
           // console.log("action:", action.payload);
-          
+
           state.user = action.payload.user;
           state.token = action.payload.token;
           state.isLoggedIn = true;
 
-          document.cookie = `authToken=${action.payload.token}; max-age=${30*24*60*60}`;
+          // setCookie(null, "authToken", `${action.payload.token}`, {
+          //   maxAge: 30 * 24 * 60 * 60,
+          // });
 
-          // window.localStorage.setItem("token", action.payload.token);
+          // document.cookie = `authToken=${action.payload.token}; max-age=${30*24*60*60}`;
         }
       )
       .addMatcher(
@@ -61,9 +64,9 @@ const authSlice = createSlice({
           state.token = null;
           state.isLoggedIn = false;
 
-          document.cookie = `authToken=; max-age=-1`
+          // destroyCookie(null, "authToken");
 
-          // window.localStorage.setItem("token", "");
+          // document.cookie = `authToken=; max-age=-1`
         }
       )
       .addMatcher(
@@ -74,7 +77,6 @@ const authSlice = createSlice({
         }
       );
   },
-        
 });
 
 export const { logIn, logOut, setToken } = authSlice.actions;
