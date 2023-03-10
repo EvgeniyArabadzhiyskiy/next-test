@@ -30,6 +30,8 @@
 //=============================================================
 
 import App from "next/app";
+
+import { SessionProvider } from "next-auth/react";
 // import "../styles/globals.css";
 // import { wrapper } from "@/redux/store";
 import GlobalLayout from "@/components/GlobalLayout";
@@ -45,12 +47,18 @@ import { parseCookies } from "nookies";
 globalThis.AbortController = AbortController;
 const { wrapper } = require("../redux/store");
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
     <>
-      <GlobalLayout>{getLayout(<Component {...pageProps} />)}</GlobalLayout>
+      <GlobalLayout>
+        {getLayout(
+          <SessionProvider session={session}>
+            <Component {...pageProps} />
+          </SessionProvider>
+        )}
+      </GlobalLayout>
       <GlobalStyles />
     </>
   );
@@ -60,11 +68,12 @@ MyApp.getInitialProps = wrapper.getInitialAppProps(
   (store) => async (appCtx) => {
     // console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", appCtx.ctx.pathname);
 
+    // const isLoggedIn = store.getState().isLoggedIn;
+
     const { authToken } = parseCookies(appCtx.ctx);
-    console.log("authToken:", authToken);
+    // console.log("authToken:", authToken);
 
     if (authToken) {
-      console.log("SERVER");
       store.dispatch(setToken(authToken));
     }
 
@@ -89,9 +98,13 @@ MyApp.getInitialProps = wrapper.getInitialAppProps(
 
     // console.log("hello world");
 
-    // store.dispatch(userRefresh.initiate())
-    // const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()))
-    // console.log("result>>>>>>>>>>>>>>>>", result);
+    if (authToken) {
+      store.dispatch(userRefresh.initiate());
+      const [result] = await Promise.all(
+        store.dispatch(getRunningQueriesThunk())
+      );
+      // console.log("result>>>>>>>>>>>>>>>>", result);
+    }
 
     // const state = store.getState();
     // console.log("state:", state.auth);
