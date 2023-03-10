@@ -67,6 +67,7 @@ export default function Home({ fallback }) {
           <Link href="/pokemons/proba">Pokemons Proba</Link>
           <Link href='/blog' >Go Blog</Link>
           <Link href="/pixabay" >PIXABAY</Link>
+          <Link href="/server">Server</Link>
           <Link href="/login" >LOGIN</Link>
           <p>
             Get started by editing&nbsp;
