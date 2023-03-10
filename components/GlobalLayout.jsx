@@ -1,11 +1,14 @@
 import { logOut } from "@/redux/auth/authSlice";
 import { useUserLogoutMutation } from "@/redux/walletApiService/userApi";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
 import { useDispatch } from "react-redux";
 
 const GlobalLayout = ({ children }) => {
   // const dispatch = useDispatch();
+  const router = useRouter()
 
   const [userLogoutRTKQ] = useUserLogoutMutation();
 
@@ -14,8 +17,14 @@ const GlobalLayout = ({ children }) => {
     await userLogoutRTKQ();
     console.log("LOGOUT");
 
-    destroyCookie(null, 'authToken')
+    destroyCookie(null, "authToken");
   };
+
+  const onNextAuthOut = () => {
+    signOut({ redirect: false, callbackUrl: "/login" });
+    router.push('/login')
+  };
+
   return (
     <>
       <div style={{ height: "100px", background: "teal" }}>
@@ -24,6 +33,7 @@ const GlobalLayout = ({ children }) => {
         <button type="button" onClick={onLogout}>
           LOGOUT
         </button>
+        <button onClick={onNextAuthOut}>Sign Out</button>
       </div>
       <main>{children}</main>
       <div style={{ height: "100px", background: "teal" }}>FOOTER</div>
