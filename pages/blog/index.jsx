@@ -1,6 +1,7 @@
 import Counter from "@/components/Counter/Counter";
 import NestedLayout from "@/components/NestedLayout";
 import { makeStore } from "@/redux/store";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -27,6 +28,8 @@ import { useSelector } from "react-redux";
 // }
 
 const Blog = (props) => {
+  const { data: session } = useSession();
+  console.log("Blog  session:", session);
   // console.log("Blog  props:", props);
   
   const router = useRouter();
@@ -49,8 +52,20 @@ const Blog = (props) => {
   //   }
   // },[router]);
 
+  // useEffect(() => {
+  //   if (!session) {
+  //     router.push("/");
+  //   }
+
+  // },[router, session]);
+
   const onProba = () => {
     router.push('/pokemons/proba')
+  }
+
+  if (!session) {
+    // router.push('/login')
+    return <h1>Protected</h1>
   }
 
   return (
