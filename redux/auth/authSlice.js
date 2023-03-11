@@ -52,8 +52,8 @@ const authSlice = createSlice({
 
           // setCookie(null, "authToken", `${action.payload.token}`, {
           //   maxAge: 30 * 24 * 60 * 60,
+          //   path: "/",
           // });
-
           // document.cookie = `authToken=${action.payload.token}; max-age=${30*24*60*60}`;
         }
       )
@@ -64,8 +64,7 @@ const authSlice = createSlice({
           state.token = null;
           state.isLoggedIn = false;
 
-          // destroyCookie(null, "authToken");
-
+          // destroyCookie(null, "authToken", { path: '/' });
           // document.cookie = `authToken=; max-age=-1`
         }
       )
