@@ -8,22 +8,24 @@ import { useDispatch } from "react-redux";
 
 const GlobalLayout = ({ children }) => {
   // const dispatch = useDispatch();
-  const router = useRouter()
+  const router = useRouter();
 
   const [userLogoutRTKQ] = useUserLogoutMutation();
 
   const onLogout = async () => {
-    // dispatch(logOut());
     await userLogoutRTKQ();
     console.log("LOGOUT");
 
-    destroyCookie(null, "authToken");
+    destroyCookie(null, "authToken", { path: "/" });
+    router.replace('/login')
+    
+    // document.cookie = `authToken=; max-age=-1`
   };
 
-  const onNextAuthOut = () => {
-    signOut({ redirect: false, callbackUrl: "/login" });
-    router.push('/login')
-  };
+  // const onNextAuthOut = () => {
+  //   signOut({ redirect: false, callbackUrl: "/login" });
+  //   router.push('/login')
+  // };
 
   return (
     <>
@@ -33,7 +35,7 @@ const GlobalLayout = ({ children }) => {
         <button type="button" onClick={onLogout}>
           LOGOUT
         </button>
-        <button onClick={onNextAuthOut}>Sign Out</button>
+        {/* <button onClick={onNextAuthOut}>Sign Out</button> */}
       </div>
       <main>{children}</main>
       <div style={{ height: "100px", background: "teal" }}>FOOTER</div>
