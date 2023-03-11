@@ -20,57 +20,56 @@ import {
 
 import { setInitialCounter } from "@/redux/counter/counter";
 
-
-
 import { setToken } from "@/redux/auth/authSlice";
 import axios from "axios";
+import { useServerRedirect } from "@/lib/useServerRedirect";
 
-export const getServerSideProps = wrapper.getServerSideProps((store) =>  async (context) => {
-  // let authSetHeader = context.req.headers
-  // console.log("getServerSideProps  authSetHeader:", authSetHeader);
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async (context) => {
+    const { isLoggedIn } = store.getState().auth;
 
-  //   const response = await fetch(
-  //   `https://wallet-backend-xmk0.onrender.com/api/transactions?page=1&limit=5`, {
-  //     headers: {
-  //       ["authorization"]: authSetHeader
-  //     }
-  //   }
-  // );
-  //  const data = await response.json()
-  //  console.log("getServerSideProps  response:", response?.data.userBalance);
+    if (isLoggedIn) {
+      return {
+        redirect: {
+          destination: "/login",
+        },
+      };
+    }
 
+    // let authSetHeader = context.req.headers
+    // console.log("getServerSideProps  authSetHeader:", authSetHeader);
 
-  // let authSetHeader = context.req.headers["authorization"] || null
-  // store.dispatch(setToken(authSetHeader))
+    //   const response = await fetch(
+    //   `https://wallet-backend-xmk0.onrender.com/api/transactions?page=1&limit=5`, {
+    //     headers: {
+    //       ["authorization"]: authSetHeader
+    //     }
+    //   }
+    // );
+    //  const data = await response.json()
+    //  console.log("getServerSideProps  response:", response?.data.userBalance);
 
-  // const { token } = store.getState().auth;
-  // console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
-  
-  const { pageNum } = store.getState().transactions;
-  store.dispatch(getAllTransactions.initiate({ pageNum }));
-  const [result] = await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    // let authSetHeader = context.req.headers["authorization"] || null
+    // store.dispatch(setToken(authSetHeader))
 
-  // if (result.isError) {
-  //   const errorMessage = result.error;
-  //   return { props: {error: result.error} };
-  // }
+    // const { token } = store.getState().auth;
+    // console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
 
-  store.dispatch(setInitialTransactions(result.data || []));
-  store.dispatch(setInitialCounter({ amount: 10, type: "start" }));
+    const { pageNum } = store.getState().transactions;
+    store.dispatch(getAllTransactions.initiate({ pageNum }));
+    const [result] = await Promise.all(
+      store.dispatch(getRunningQueriesThunk())
+    );
 
-  // return { props: {} };
-})
+    store.dispatch(setInitialTransactions(result.data || []));
+    store.dispatch(setInitialCounter({ amount: 10, type: "start" }));
 
+    return { props: {} };
+  }
+);
 
-
-const TransactionsList = ({ id}) => {
-  // console.log("TransactionsList  id:", id);
-  // if (error) {
-  //   console.log("TransactionsList  error:", error);
-  // }
-
+const TransactionsList = ({ id }) => {
   const [isSkip, setIsSkip] = useState(true);
-  // const { counter } = useSelector((state) => state.counter);
 
   const dispatch = useDispatch();
   const { transactions, pageNum } = useSelector((state) => state.transactions);
@@ -90,7 +89,6 @@ const TransactionsList = ({ id}) => {
       // });
       // const data = await response.json();
       // console.log("getStaticProps  data", data);
-
       // const response = await fetch(
       //   `https://wallet-backend-xmk0.onrender.com/api/transactions?page=1&limit=5`, {
       //     headers: {
@@ -100,8 +98,8 @@ const TransactionsList = ({ id}) => {
       // );
       // const data = await response.json()
       // console.log("getServerSideProps  data:", data);
-    })()
-  })
+    })();
+  });
 
   useEffect(() => {
     if (data.length === 0) return;
