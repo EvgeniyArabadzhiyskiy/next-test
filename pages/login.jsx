@@ -23,70 +23,68 @@ import { useRouter } from "next/router";
 //   // console.log("getStaticProps  store:", store.getState().auth);
 // });
 
-// const LoginPage = () => {
-//   const { data: session } = useSession()
-//   console.log("LoginPage  session:", session);
+const LoginPage = () => {
+  const [userLoginRTKQ] = useUserLoginMutation();
 
-//   const [userLoginRTKQ] = useUserLoginMutation();
+  const onLogin = async () => {
+    const credentials = {
+      email: "user100@mail.com",
+      password: "a123456",
+    };
 
-//   const onLogin = async () => {
-//     const credentials = {
-//       email: "user100@mail.com",
-//       password: "a123456",
-//     };
+    const currentUser = await userLoginRTKQ(credentials);
 
-//     const currentUser = await userLoginRTKQ(credentials);
+    setCookie(null, "authToken", `${currentUser.data.token}`, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: "/",
+    });
 
-//     setCookie(null, 'authToken', `${currentUser.data.token}`, { maxAge: 30 * 24 * 60 * 60})
-
-//     // document.cookie = `authToken=${currentUser.data.token}; max-age=${30*24*60*60}`;
-//     // const cookieValue = document.cookie
-//     //   .split("; ")
-//     //   .find((row) => row.startsWith("goit="))
-//     //   ?.split("=")[1];
-//   };
-
-//   return (
-//     <>
-//       <h1>Login Page</h1>
-
-//       <button type="button" onClick={onLogin}>
-//         LOGIN
-//       </button>
-
-//       <Link href="/">Go Home</Link>
-//     </>
-//   );
-// };
-
-// export default LoginPage;
-
-export default function LoginPage() {
-  const { data: session } = useSession();
-  // console.log("LoginPage  session:", session);
-
-  const router = useRouter();
-
-  const onSignIn = async () => {
-    await signIn('google', { callbackUrl: 'http://localhost:3000/blog' });
-    // await router.push("/");
+    // document.cookie = `authToken=${currentUser.data.token}; max-age=${30*24*60*60}`;
+    // const cookieValue = document.cookie
+    //   .split("; ")
+    //   .find((row) => row.startsWith("goit="))
+    //   ?.split("=")[1];
   };
 
- 
-
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user.email} <br />
-        {/* <button onClick={() => signOut()}>Sign out</button> */}
-        <Link href="/server"> ← Back to home</Link>
-      </>
-    );
-  }
   return (
     <>
-      Not signed in <br />
-      <button onClick={onSignIn}>Sign in</button>
+      <h1>Login Page</h1>
+
+      <button type="button" onClick={onLogin}>
+        LOGIN
+      </button>
+
+      <Link href="/">Go Home</Link>
     </>
   );
-}
+};
+
+export default LoginPage;
+
+// export default function LoginPage() {
+//   const { data: session } = useSession();
+//   // console.log("LoginPage  session:", session);
+
+//   const router = useRouter();
+
+//   const onSignIn = async () => {
+//     await signIn('google', { callbackUrl: 'http://localhost:3000/blog' });
+//     // await router.push("/");
+//   };
+
+//   if (session) {
+//     return (
+//       <>
+//         {/* Signed in as {session.user.email} <br /> */}
+//         {/* <button onClick={() => signOut()}>Sign out</button> */}
+//         <Link href="/server"> ← Back to home</Link>
+//       </>
+//     );
+//   }
+//   return (
+//     <>
+//       Not signed in <br />
+//       <button onClick={onSignIn}>Sign in</button>
+//     </>
+//   );
+// }
