@@ -54,9 +54,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <>
       <GlobalLayout>
         {getLayout(
-          <SessionProvider session={session}>
+          // <SessionProvider session={session}>
             <Component {...pageProps} />
-          </SessionProvider>
+          //  </SessionProvider> 
         )}
       </GlobalLayout>
       <GlobalStyles />
