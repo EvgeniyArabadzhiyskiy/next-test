@@ -5,8 +5,8 @@ import { makeStore } from "./redux/store";
 export async function middleware(request) {
   // const store = makeStore();
 
-  const cookies = request.cookies;
-  const authToken = cookies.get("authToken")?.value;
+  // const cookies = request.cookies;
+  // const authToken = cookies.get("authToken")?.value;
 
   // console.log("I am middleware");
 
