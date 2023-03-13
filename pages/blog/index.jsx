@@ -1,10 +1,11 @@
 import Counter from "@/components/Counter/Counter";
 import NestedLayout from "@/components/NestedLayout";
 import useAuthGuard from "@/lib/useAuthGuard";
-import { makeStore } from "@/redux/store";
-import { useSession } from "next-auth/react";
+import { makeStore, wrapper } from "@/redux/store";
+import { getSession, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+// import Router from 'next/router';
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
@@ -28,45 +29,61 @@ import { useSelector } from "react-redux";
 //   }
 // }
 
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   (store) => async (context) => {
+//     const session = await getSession({ req: context.req });
+//     console.log("session:", session);
+
+//     if (!session) {
+//       return {
+//         redirect: {
+//           destination: "/login",
+//           permanent: false,
+//         },
+//       };
+//     }
+//     return {
+//       props: {
+//         session,
+//       },
+//     };
+//   }
+// );
+
 const Blog = (props) => {
-  const [AuthGuardPage] =  useAuthGuard()
-  //   const { data: session } = useSession();
-  //   console.log("Blog  session:", session);
+    // const { data: session, status  } = useSession();
+    // console.log("Blog  status:", status);
+    // console.log("Blog  session:", session);
 
   const router = useRouter();
-  const authState = useSelector((st) => st.auth);
-  // console.log("Blog  authState:", authState);
+  // const { AuthGuardPage } = useAuthGuard();
+  const { isLoggedIn } = useSelector((st) => st.auth);
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/login");
+    }
 
-  // useEffect(() => {
-  //   // if (!isLoggedIn) {
-  //   //   router.push("/pokemons");
-  //   // }
-
-  //   const { pathname } = router
-
-  //   if(pathname == '/blog' ){
-  //     router.push('/pokemons')
-  //   }
-  // },[router]);
-
-  // useEffect(() => {
-  //   if (!session) {
-  //     router.push("/");
-  //   }
-
-  // },[router, session]);
+  },[router, isLoggedIn]);
 
   const onProba = () => {
     router.push("/pokemons/proba");
   };
 
+  // if (status === "loading") {
+  //   return <div>Loading...</div>
+  // }
+
   // if (!session) {
   //   return <h1>Protected</h1>
   // }
 
+   if (!isLoggedIn) {
+    return <h1>Loading...</h1>
+  }
+
   return (
-    <AuthGuardPage>
+    <>
       <h1>Page Blog</h1>
       <Link href="/">GO HOME</Link>
       <Counter />
@@ -76,9 +93,26 @@ const Blog = (props) => {
       <button type="button" onClick={onProba}>
         PROBA
       </button>
-    </AuthGuardPage>
+    </>
   );
 };
+
+// Blog.getInitialProps = wrapper.getInitialAppProps(
+//   (store) => ({ res }) => {
+
+//   const state = store.getState()
+//   const {isLoggedIn} = state.auth
+
+//   if (!isLoggedIn) {
+//     res.writeHead(302, { Location: '/pokemons' });
+//     res.end();
+//   }
+//   //  else {
+//     // Router.push('/pokemons');
+//   // }
+
+//   return {};
+// })
 
 export default Blog;
 
