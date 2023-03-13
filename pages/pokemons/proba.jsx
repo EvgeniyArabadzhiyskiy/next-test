@@ -28,7 +28,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
     const { isLoggedIn } = store.getState().auth;
 
-    if (isLoggedIn) {
+    if (!isLoggedIn) {
       return {
         redirect: {
           destination: "/login",
