@@ -43,6 +43,7 @@ import {
   userRefresh,
 } from "@/redux/walletApiService/userApi";
 import { parseCookies } from "nookies";
+import PrivateRoute from "@/components/PrivateRoute";
 
 globalThis.AbortController = AbortController;
 const { wrapper } = require("../redux/store");
@@ -50,13 +51,17 @@ const { wrapper } = require("../redux/store");
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const getLayout = Component.getLayout || ((page) => page);
 
+  const protectedRoutes = ["/blog", '/pokemons'];
+
   return (
     <>
       <GlobalLayout>
         {getLayout(
           // <SessionProvider session={session}>
+           // <PrivateRoute protectedRoutes={protectedRoutes}> 
             <Component {...pageProps} />
-          //  </SessionProvider> 
+           // </PrivateRoute> 
+          //  </SessionProvider>
         )}
       </GlobalLayout>
       <GlobalStyles />
@@ -68,7 +73,12 @@ MyApp.getInitialProps = wrapper.getInitialAppProps(
   (store) => async (appCtx) => {
     // console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", appCtx.ctx.pathname);
 
+    // const res = appCtx.ctx.pathname
     // const isLoggedIn = store.getState().isLoggedIn;
+    // if (!isLoggedIn) {
+    //   res.writeHead(302, { Location: '/pokemons' });
+    //   res.end();
+    // }
 
     const { authToken } = parseCookies(appCtx.ctx);
     // console.log("authToken:", authToken);
