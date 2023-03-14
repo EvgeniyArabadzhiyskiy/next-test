@@ -41,9 +41,13 @@ import { setToken } from "@/redux/auth/authSlice";
 import {
   getRunningQueriesThunk,
   userRefresh,
+  useUserRefreshQuery,
 } from "@/redux/walletApiService/userApi";
 import { parseCookies } from "nookies";
 import PrivateRoute from "@/components/PrivateRoute";
+import Router from "next/router";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 globalThis.AbortController = AbortController;
 const { wrapper } = require("../redux/store");
@@ -51,16 +55,42 @@ const { wrapper } = require("../redux/store");
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const getLayout = Component.getLayout || ((page) => page);
 
-  const protectedRoutes = ["/blog", '/pokemons'];
+  const protectedRoutes = ["/blog", "/pokemons"];
+
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((s) => s.auth);
+
+  let token = null
+
+  if (typeof window !== "undefined") {
+    const authToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("authToken="))
+      ?.split("=")[1];
+
+      token = authToken
+
+  }
+
+  console.log("MyApp  token:", token);
+  const { isError, isLoading } = useUserRefreshQuery(undefined, { skip: !token })
+
+    useEffect(() => {
+    // if (!isLoggedIn) {
+
+    // }
+    dispatch(setToken(token));
+
+  },[dispatch, token]);
 
   return (
     <>
       <GlobalLayout>
         {getLayout(
           // <SessionProvider session={session}>
-           // <PrivateRoute protectedRoutes={protectedRoutes}> 
+          <PrivateRoute protectedRoutes={protectedRoutes}>
             <Component {...pageProps} />
-           // </PrivateRoute> 
+          </PrivateRoute>
           //  </SessionProvider>
         )}
       </GlobalLayout>
@@ -69,65 +99,46 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   );
 }
 
-MyApp.getInitialProps = wrapper.getInitialAppProps(
-  (store) => async (appCtx) => {
-    // console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", appCtx.ctx.pathname);
+// MyApp.getInitialProps = wrapper.getInitialAppProps(
+//   (store) => async (appCtx) => {
+//     // const req = appCtx.ctx.req
 
-    // const res = appCtx.ctx.pathname
-    // const isLoggedIn = store.getState().isLoggedIn;
-    // if (!isLoggedIn) {
-    //   res.writeHead(302, { Location: '/pokemons' });
-    //   res.end();
-    // }
+//     const { authToken } = parseCookies(appCtx.ctx);
+//     if (authToken) {
+//       store.dispatch(setToken(authToken));
 
-    const { authToken } = parseCookies(appCtx.ctx);
-    // console.log("authToken:", authToken);
+//       store.dispatch(userRefresh.initiate());
+//       const [result] = await Promise.all(
+//         store.dispatch(getRunningQueriesThunk())
+//       );
+//     }
 
-    if (authToken) {
-      store.dispatch(setToken(authToken));
-    }
+//     // let userToken = null;
 
-    // let userToken = null;
+//     // if (appCtx.ctx.req) {
+//     //   const authToken = appCtx.ctx.req?.cookies.authToken;
+//     //   // console.log("authToken&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&:", authToken);
+//     //   userToken = authToken;
+//     // }
+//     // else {
+//     //   const cookieValue = document.cookie
+//     //     .split("; ")
+//     //     .find((row) => row.startsWith("authToken="))
+//     //     ?.split("=")[1];
+//     //   console.log("cookieValue:", cookieValue);
 
-    // if (appCtx.ctx.req) {
-    //   const authToken = appCtx.ctx.req?.cookies.authToken;
-    //   // console.log("authToken&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&:", authToken);
-    //   userToken = authToken;
-    // }
-    // else {
-    //   const cookieValue = document.cookie
-    //     .split("; ")
-    //     .find((row) => row.startsWith("authToken="))
-    //     ?.split("=")[1];
-    //   console.log("cookieValue:", cookieValue);
+//     //   userToken = cookieValue;
+//     // }
 
-    //   userToken = cookieValue;
-    // }
+//     const childrenGip = await App.getInitialProps(appCtx);
 
-    // store.dispatch(setToken(userToken || null));
-
-    // console.log("hello world");
-
-    if (authToken) {
-      store.dispatch(userRefresh.initiate());
-      const [result] = await Promise.all(
-        store.dispatch(getRunningQueriesThunk())
-      );
-      // console.log("result>>>>>>>>>>>>>>>>", result);
-    }
-
-    // const state = store.getState();
-    // console.log("state:", state.auth);
-
-    const childrenGip = await App.getInitialProps(appCtx);
-
-    return {
-      pageProps: {
-        ...childrenGip.pageProps,
-        id: 42,
-      },
-    };
-  }
-);
+//     return {
+//       pageProps: {
+//         ...childrenGip.pageProps,
+//         id: 42,
+//       },
+//     };
+//   }
+// );
 
 export default wrapper.withRedux(MyApp);
