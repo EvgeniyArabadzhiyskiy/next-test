@@ -28,13 +28,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
     const { isLoggedIn } = store.getState().auth;
 
-    if (!isLoggedIn) {
-      return {
-        redirect: {
-          destination: "/login",
-        },
-      };
-    }
+    // if (!isLoggedIn) {
+    //   return {
+    //     redirect: {
+    //       destination: "/login",
+    //     },
+    //   };
+    // }
 
     // let authSetHeader = context.req.headers
     // console.log("getServerSideProps  authSetHeader:", authSetHeader);
