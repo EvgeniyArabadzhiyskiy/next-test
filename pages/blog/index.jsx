@@ -59,12 +59,12 @@ const Blog = (props) => {
   // const { AuthGuardPage } = useAuthGuard();
   const { isLoggedIn } = useSelector((st) => st.auth);
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.push("/login");
-    }
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     router.push("/login");
+  //   }
 
-  },[router, isLoggedIn]);
+  // },[router, isLoggedIn]);
 
   const onProba = () => {
     router.push("/pokemons/proba");
@@ -78,9 +78,9 @@ const Blog = (props) => {
   //   return <h1>Protected</h1>
   // }
 
-   if (!isLoggedIn) {
-    return <h1>Loading...</h1>
-  }
+  //  if (!isLoggedIn) {
+  //   return <h1>Loading...</h1>
+  // }
 
   return (
     <>
