@@ -1,8 +1,6 @@
 import { logIn } from "@/redux/auth/authSlice";
 import { wrapper } from "@/redux/store";
 import {
-  getRunningMutationsThunk,
-  getRunningQueriesThunk,
   userApi,
   userLogin,
   useUserLoginMutation,
@@ -14,14 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
-export const getStaticProps = wrapper.getStaticProps((store) => async () => {
 
-  const credentials = { email: "user100@mail.com", password: "a123456" };
-  store.dispatch(userLogin.initiate(credentials));
-  const [result] = await Promise.all(store.dispatch(getRunningMutationsThunk()));
-  // console.log("getStaticProps  result:", result);
-  // console.log("getStaticProps  store:", store.getState().auth);
-});
 
 const LoginPage = () => {
   const [userLoginRTKQ] = useUserLoginMutation();
