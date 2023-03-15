@@ -58,30 +58,18 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const protectedRoutes = ["/blog", "/pokemons"];
 
   const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector((s) => s.auth);
+  // const { isLoggedIn } = useSelector((s) => s.auth);
+  const { token } = useSelector((state) => state.auth);
+  // console.log("MyApp  token:", token);
 
-  let token = null
+  const { isError, isLoading } = useUserRefreshQuery(undefined, {
+    skip: !token,
+  });
 
-  if (typeof window !== "undefined") {
-    const authToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("authToken="))
-      ?.split("=")[1];
-
-      token = authToken
-
-  }
-
-  console.log("MyApp  token:", token);
-  const { isError, isLoading } = useUserRefreshQuery(undefined, { skip: !token })
-
-    useEffect(() => {
-    // if (!isLoggedIn) {
-
-    // }
-    dispatch(setToken(token));
-
-  },[dispatch, token]);
+  // useEffect(() => {
+  //   const token = window.localStorage.getItem("authToken");
+  //   dispatch(setToken(token));
+  // }, [dispatch]);
 
   return (
     <>
