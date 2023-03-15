@@ -23,10 +23,14 @@ import { setInitialCounter } from "@/redux/counter/counter";
 import { setToken } from "@/redux/auth/authSlice";
 import axios from "axios";
 import { useServerRedirect } from "@/lib/useServerRedirect";
+import { parseCookies } from "nookies";
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
-    const { isLoggedIn } = store.getState().auth;
+    const { authToken } = parseCookies(context);
+
+    // const { isLoggedIn } = store.getState().auth;
+    // console.log("isLoggedIn:", isLoggedIn);
 
     // if (!isLoggedIn) {
     //   return {
@@ -55,20 +59,25 @@ export const getServerSideProps = wrapper.getServerSideProps(
     // const { token } = store.getState().auth;
     // console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
 
-    const { pageNum } = store.getState().transactions;
-    store.dispatch(getAllTransactions.initiate({ pageNum }));
-    const [result] = await Promise.all(
-      store.dispatch(getRunningQueriesThunk())
-    );
+    if (authToken) {
+      store.dispatch(setToken(authToken));
 
-    store.dispatch(setInitialTransactions(result.data || []));
+      const { pageNum } = store.getState().transactions;
+      store.dispatch(getAllTransactions.initiate({ pageNum }));
+      const [result] = await Promise.all(
+        store.dispatch(getRunningQueriesThunk())
+      );
+      // console.log("result:", result);
+      store.dispatch(setInitialTransactions(result.data || []));
+    }
+
     store.dispatch(setInitialCounter({ amount: 10, type: "start" }));
 
     return { props: {} };
   }
 );
 
-const TransactionsList = ({ id }) => {
+const TransactionsList = () => {
   const [isSkip, setIsSkip] = useState(true);
 
   const dispatch = useDispatch();
