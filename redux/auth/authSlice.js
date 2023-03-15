@@ -8,7 +8,7 @@ const authSlice = createSlice({
 
   initialState: {
     user: { firstName: null, email: null, balance: 0 },
-    token: null,
+    token:  null,
     isLoggedIn: false,
   },
 
@@ -29,18 +29,18 @@ const authSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(HYDRATE, (state, action) => {
-        let nextState = {
-          ...state,
-          ...action.payload.auth,
-        };
+      // .addCase(HYDRATE, (state, action) => {
+      //   let nextState = {
+      //     ...state,
+      //     ...action.payload.auth,
+      //   };
 
-        // if (state.token) {
-        //   nextState = state;
-        // }
+      //   // if (state.token) {
+      //   //   nextState = state;
+      //   // }
 
-        return nextState;
-      })
+      //   return nextState;
+      // })
       .addMatcher(
         userApi.endpoints.userLogin.matchFulfilled,
         (state, action) => {
@@ -55,6 +55,8 @@ const authSlice = createSlice({
           //   path: "/",
           // });
           // document.cookie = `authToken=${action.payload.token}; max-age=${30*24*60*60}`;
+
+          window.localStorage.setItem('authToken', action.payload.token )
         }
       )
       .addMatcher(
@@ -66,6 +68,9 @@ const authSlice = createSlice({
 
           // destroyCookie(null, "authToken", { path: '/' });
           // document.cookie = `authToken=; max-age=-1`
+
+          window.localStorage.removeItem('authToken')
+
         }
       )
       .addMatcher(
@@ -73,6 +78,10 @@ const authSlice = createSlice({
         (state, action) => {
           state.user = action.payload;
           state.isLoggedIn = true;
+          
+          // state.token = window.localStorage.getItem('authToken')
+          // console.log("window.localStorage.getItem('authToken'):", window.localStorage.getItem('authToken'));
+
         }
       );
   },
