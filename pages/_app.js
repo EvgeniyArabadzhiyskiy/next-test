@@ -55,21 +55,26 @@ const { wrapper } = require("../redux/store");
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const getLayout = Component.getLayout || ((page) => page);
 
-  const protectedRoutes = ["/blog", "/pokemons"];
+  const protectedRoutes = ["/", "/pixabay", "/blog", "/pokemons", "/pokemons/proba", "/pokemons/new/[name]"];
+  // const protectedRoutes = [ "/blog", "/pokemons", ];
 
   const dispatch = useDispatch();
-  // const { isLoggedIn } = useSelector((s) => s.auth);
   const { token } = useSelector((state) => state.auth);
-  // console.log("MyApp  token:", token);
 
   const { isError, isLoading } = useUserRefreshQuery(undefined, {
     skip: !token,
   });
 
-  // useEffect(() => {
-  //   const token = window.localStorage.getItem("authToken");
-  //   dispatch(setToken(token));
-  // }, [dispatch]);
+  useEffect(() => {
+    const { authToken } = parseCookies();
+
+    if (authToken) {
+      dispatch(setToken(authToken));
+    }
+
+    // const authToken = window.localStorage.getItem("authToken");
+    // dispatch(setToken(authToken));
+  }, [dispatch]);
 
   return (
     <>
@@ -123,7 +128,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 //     return {
 //       pageProps: {
 //         ...childrenGip.pageProps,
-//         id: 42,
 //       },
 //     };
 //   }
