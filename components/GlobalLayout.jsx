@@ -16,8 +16,8 @@ const GlobalLayout = ({ children }) => {
     await userLogoutRTKQ();
     console.log("LOGOUT");
 
-    destroyCookie(null, "authToken", { path: "/" });
-    router.replace('/login')
+    // destroyCookie(null, "authToken", { path: "/" });
+    // router.replace('/login')
     
     // document.cookie = `authToken=; max-age=-1`
   };
