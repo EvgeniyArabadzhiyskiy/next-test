@@ -25,10 +25,10 @@ const LoginPage = () => {
 
     const currentUser = await userLoginRTKQ(credentials);
 
-    // setCookie(null, "authToken", `${currentUser.data.token}`, {
-    //   maxAge: 30 * 24 * 60 * 60,
-    //   path: "/",
-    // });
+    setCookie(null, "authToken", `${currentUser.data.token}`, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: "/",
+    });
 
     // document.cookie = `authToken=${currentUser.data.token}; max-age=${30*24*60*60}`;
     // const cookieValue = document.cookie
