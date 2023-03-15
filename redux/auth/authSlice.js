@@ -56,7 +56,7 @@ const authSlice = createSlice({
           // });
           // document.cookie = `authToken=${action.payload.token}; max-age=${30*24*60*60}`;
 
-          window.localStorage.setItem('authToken', action.payload.token )
+          // window.localStorage.setItem('authToken', action.payload.token )
         }
       )
       .addMatcher(
@@ -69,7 +69,7 @@ const authSlice = createSlice({
           // destroyCookie(null, "authToken", { path: '/' });
           // document.cookie = `authToken=; max-age=-1`
 
-          window.localStorage.removeItem('authToken')
+          // window.localStorage.removeItem('authToken')
 
         }
       )
