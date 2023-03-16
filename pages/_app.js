@@ -55,35 +55,41 @@ const { wrapper } = require("../redux/store");
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const getLayout = Component.getLayout || ((page) => page);
 
-  const protectedRoutes = ["/", "/pixabay", "/blog", "/pokemons", "/pokemons/proba", "/pokemons/new/[name]"];
+  // const protectedRoutes = [ "/pixabay", "/blog", "/pokemons", "/pokemons/proba", "/pokemons/new/[name]"];
   // const protectedRoutes = [ "/blog", "/pokemons", ];
 
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
+  // const { token } = useSelector((state) => state.auth);
+  console.log("APPPPPPPPPPPPPPPPPPPPPPPPPP");
 
-  const { isError, isLoading } = useUserRefreshQuery(undefined, {
-    skip: !token,
-  });
+  // const { isError, isLoading } = useUserRefreshQuery(undefined, {
+  //   skip: !token,
+  // });
+ 
 
-  useEffect(() => {
-    const { authToken } = parseCookies();
+  // useEffect(() => {
+  //   const { authToken } = parseCookies();
 
-    if (authToken) {
-      dispatch(setToken(authToken));
-    }
+  //   if (authToken) {
+  //     dispatch(setToken(authToken));
+  //   }
 
-    // const authToken = window.localStorage.getItem("authToken");
-    // dispatch(setToken(authToken));
-  }, [dispatch]);
+  //   // const authToken = window.localStorage.getItem("authToken");
+  //   // dispatch(setToken(authToken));
+  // }, [dispatch]);
+
+  // if (isLoading) {
+  //   return <h1>Loading APP...</h1>;
+  // }
 
   return (
     <>
       <GlobalLayout>
         {getLayout(
           // <SessionProvider session={session}>
-          <PrivateRoute protectedRoutes={protectedRoutes}>
+          //<PrivateRoute protectedRoutes={protectedRoutes}>
             <Component {...pageProps} />
-          </PrivateRoute>
+          //</PrivateRoute>
           //  </SessionProvider>
         )}
       </GlobalLayout>
@@ -92,45 +98,45 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   );
 }
 
-// MyApp.getInitialProps = wrapper.getInitialAppProps(
-//   (store) => async (appCtx) => {
-//     // const req = appCtx.ctx.req
+MyApp.getInitialProps = wrapper.getInitialAppProps(
+  (store) => async (appCtx) => {
+    // const req = appCtx.ctx.req
 
-//     const { authToken } = parseCookies(appCtx.ctx);
-//     if (authToken) {
-//       store.dispatch(setToken(authToken));
+    // const { authToken } = parseCookies(appCtx.ctx);
+    // if (authToken) {
+    //   store.dispatch(setToken(authToken));
 
-//       store.dispatch(userRefresh.initiate());
-//       const [result] = await Promise.all(
-//         store.dispatch(getRunningQueriesThunk())
-//       );
-//     }
+    //   store.dispatch(userRefresh.initiate());
+    //   const [result] = await Promise.all(
+    //     store.dispatch(getRunningQueriesThunk())
+    //   );
+    // }
 
-//     // let userToken = null;
+    // let userToken = null;
 
-//     // if (appCtx.ctx.req) {
-//     //   const authToken = appCtx.ctx.req?.cookies.authToken;
-//     //   // console.log("authToken&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&:", authToken);
-//     //   userToken = authToken;
-//     // }
-//     // else {
-//     //   const cookieValue = document.cookie
-//     //     .split("; ")
-//     //     .find((row) => row.startsWith("authToken="))
-//     //     ?.split("=")[1];
-//     //   console.log("cookieValue:", cookieValue);
+    // if (appCtx.ctx.req) {
+    //   const authToken = appCtx.ctx.req?.cookies.authToken;
+    //   // console.log("authToken&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&:", authToken);
+    //   userToken = authToken;
+    // }
+    // else {
+    //   const cookieValue = document.cookie
+    //     .split("; ")
+    //     .find((row) => row.startsWith("authToken="))
+    //     ?.split("=")[1];
+    //   console.log("cookieValue:", cookieValue);
 
-//     //   userToken = cookieValue;
-//     // }
+    //   userToken = cookieValue;
+    // }
 
-//     const childrenGip = await App.getInitialProps(appCtx);
+    const childrenGip = await App.getInitialProps(appCtx);
 
-//     return {
-//       pageProps: {
-//         ...childrenGip.pageProps,
-//       },
-//     };
-//   }
-// );
+    return {
+      pageProps: {
+        ...childrenGip.pageProps,
+      },
+    };
+  }
+);
 
 export default wrapper.withRedux(MyApp);
