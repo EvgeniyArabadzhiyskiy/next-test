@@ -25,57 +25,57 @@ import axios from "axios";
 import { useServerRedirect } from "@/lib/useServerRedirect";
 import { parseCookies } from "nookies";
 
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async (context) => {
-    const { authToken } = parseCookies(context);
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   (store) => async (context) => {
+//     const { authToken } = parseCookies(context);
 
-    // const { isLoggedIn } = store.getState().auth;
-    // console.log("isLoggedIn:", isLoggedIn);
+//     // const { isLoggedIn } = store.getState().auth;
+//     // console.log("isLoggedIn:", isLoggedIn);
 
-    // if (!isLoggedIn) {
-    //   return {
-    //     redirect: {
-    //       destination: "/login",
-    //     },
-    //   };
-    // }
+//     // if (!isLoggedIn) {
+//     //   return {
+//     //     redirect: {
+//     //       destination: "/login",
+//     //     },
+//     //   };
+//     // }
 
-    // let authSetHeader = context.req.headers
-    // console.log("getServerSideProps  authSetHeader:", authSetHeader);
+//     // let authSetHeader = context.req.headers
+//     // console.log("getServerSideProps  authSetHeader:", authSetHeader);
 
-    //   const response = await fetch(
-    //   `https://wallet-backend-xmk0.onrender.com/api/transactions?page=1&limit=5`, {
-    //     headers: {
-    //       ["authorization"]: authSetHeader
-    //     }
-    //   }
-    // );
-    //  const data = await response.json()
-    //  console.log("getServerSideProps  response:", response?.data.userBalance);
+//     //   const response = await fetch(
+//     //   `https://wallet-backend-xmk0.onrender.com/api/transactions?page=1&limit=5`, {
+//     //     headers: {
+//     //       ["authorization"]: authSetHeader
+//     //     }
+//     //   }
+//     // );
+//     //  const data = await response.json()
+//     //  console.log("getServerSideProps  response:", response?.data.userBalance);
 
-    // let authSetHeader = context.req.headers["authorization"] || null
-    // store.dispatch(setToken(authSetHeader))
+//     // let authSetHeader = context.req.headers["authorization"] || null
+//     // store.dispatch(setToken(authSetHeader))
 
-    // const { token } = store.getState().auth;
-    // console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
+//     // const { token } = store.getState().auth;
+//     // console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
 
-    if (authToken) {
-      store.dispatch(setToken(authToken));
+//     // if (authToken) {
+//     //   store.dispatch(setToken(authToken));
 
-      const { pageNum } = store.getState().transactions;
-      store.dispatch(getAllTransactions.initiate({ pageNum }));
-      const [result] = await Promise.all(
-        store.dispatch(getRunningQueriesThunk())
-      );
-      // console.log("result:", result);
-      store.dispatch(setInitialTransactions(result.data || []));
-    }
+//       const { pageNum } = store.getState().transactions;
+//       store.dispatch(getAllTransactions.initiate({ pageNum }));
+//       const [result] = await Promise.all(
+//         store.dispatch(getRunningQueriesThunk())
+//       );
+//       // console.log("result:", result);
+//       store.dispatch(setInitialTransactions(result.data || []));
+//     // }
 
-    store.dispatch(setInitialCounter({ amount: 10, type: "start" }));
+//     store.dispatch(setInitialCounter({ amount: 10, type: "start" }));
 
-    return { props: {} };
-  }
-);
+//     return { props: {} };
+//   }
+// );
 
 const TransactionsList = () => {
   const [isSkip, setIsSkip] = useState(true);
