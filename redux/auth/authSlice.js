@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import { destroyCookie, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { userApi } from "../walletApiService/userApi";
+
+const { authToken } = parseCookies();
 
 const authSlice = createSlice({
   name: "authSlice",
 
   initialState: {
     user: { firstName: null, email: null, balance: 0 },
-    token:  null,
+    token: null,
     isLoggedIn: false,
   },
 
