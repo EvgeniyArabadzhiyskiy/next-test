@@ -60,7 +60,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
-  console.log("APPPPPPPPPPPPPPPPPPPPPPPPPP");
+  // console.log("APPPPPPPPPPPPPPPPPPPPPPPPPP");
 
   const { isError, isLoading } = useUserRefreshQuery(undefined, {
     skip: !token,
