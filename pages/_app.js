@@ -62,21 +62,21 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const { token } = useSelector((state) => state.auth);
   // console.log("APPPPPPPPPPPPPPPPPPPPPPPPPP");
 
-  const { isError, isLoading } = useUserRefreshQuery(undefined, {
-    skip: !token,
-  });
+  // const { isError, isLoading } = useUserRefreshQuery(undefined, {
+  //   skip: !token,
+  // });
  
 
-  useEffect(() => {
-    const { authToken } = parseCookies();
+  // useEffect(() => {
+  //   const { authToken } = parseCookies();
 
-    if (authToken) {
-      dispatch(setToken(authToken));
-    }
+  //   if (authToken) {
+  //     dispatch(setToken(authToken));
+  //   }
 
-    // const authToken = window.localStorage.getItem("authToken");
-    // dispatch(setToken(authToken));
-  }, [dispatch]);
+  //   // const authToken = window.localStorage.getItem("authToken");
+  //   // dispatch(setToken(authToken));
+  // }, [dispatch]);
 
   // if (isLoading) {
   //   return <h1>Loading APP...</h1>;
@@ -87,9 +87,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
       <GlobalLayout>
         {getLayout(
           // <SessionProvider session={session}>
-          <PrivateRoute protectedRoutes={protectedRoutes}>
+          // <PrivateRoute protectedRoutes={protectedRoutes}>
             <Component {...pageProps} />
-          </PrivateRoute>
+          // </PrivateRoute>
           //  </SessionProvider>
         )}
       </GlobalLayout>
