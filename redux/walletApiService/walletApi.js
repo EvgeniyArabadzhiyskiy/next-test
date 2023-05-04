@@ -3,12 +3,28 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { HYDRATE } from "next-redux-wrapper";
 
 
-// const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY3Nzk0NTcxOSwiZXhwIjoxNjc5MTU1MzE5fQ.QSy4e8Qtlmu4tKzK9-i5WfRUhDSrdGjdRx7Cnfb3sac`;
+// function getItems(arg) {
+//   const cacheKey = JSON.stringify(arg);
+//   const cachedData = myCache.get(cacheKey);
+//   if (cachedData) {
+//     return Promise.resolve(cachedData);
+//   }
+
+//   return fetch('https://example.com/items')
+//     .then(response => response.json())
+//     .then(data => {
+//       myCache.set(cacheKey, data);
+//       return data;
+//     });
+// }
+
+
+const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY4MzEzMzYzNiwiZXhwIjoxNjg0MzQzMjM2fQ.qhziavWmqDtkfJ25kAlT6yEi0DvNWfVzEorVcBsso7M`;
 
 export const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
   prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token;
+      // const token = getState().auth.token;
       // console.log("token:===========================", token);
       
     if (token) {
@@ -32,17 +48,46 @@ export const walletApi = createApi({
   tagTypes: ["Transaction"],
 
   endpoints: (builder) => ({
+
+//================= GET ===========================================    
     getAllTransactions: builder.query({
-      query: ({ pageNum = 1, limit = 10 } = {}) => ({
-        url: `/transactions?page=${pageNum}&limit=5`,
-        method: "GET",
-      }),
+      query: ({pageNum}) => {
+        return {
+          url: `/transactions?page=${pageNum}&limit=5`,
+          method: "GET",
+        }
+      },
+
+      async onQueryStarted(arg, { dispatch,  getCacheEntry, updateCachedData }) {
+       
+      },
 
       transformResponse: (response) => response.transactions,
-
       providesTags: ["Transaction"],
     }),
 
+//================= CREATE ===========================================    
+    addTransaction: builder.mutation({
+      query: (body) => ({ url: `/transactions`, method: "POST", body: body }),
+      
+
+      async onQueryStarted(body, { dispatch, queryFulfilled }) {
+        const {data} =   await queryFulfilled
+        // console.log(walletApi.util.updateQueryData);
+
+        const patchResult = dispatch(
+          walletApi.util.updateQueryData('getAllTransactions', { pageNum: 2 }, (draft) => {
+          // console.log("walletApi.util.updateQueryData  draft:", JSON.parse(JSON.stringify(draft)));
+          
+           return [...draft, data]
+          })
+        )
+        // console.log("onQueryStarted  patchResult:", patchResult);
+
+      },
+      
+    }),
+//======================= DELETE ================================
     deleteTransaction: builder.mutation({
       query: (id) => ({ url: `/transactions/${id}`, method: "DELETE" }),
 
@@ -53,6 +98,7 @@ export const walletApi = createApi({
 
 export const {
   useGetAllTransactionsQuery,
+  useAddTransactionMutation,
   useDeleteTransactionMutation,
   util: { getRunningQueriesThunk },
 } = walletApi;
