@@ -17,6 +17,10 @@ const transactionsSlice = createSlice({
       state.pageNum += 1;
     },
 
+    setPrevPage: (state) => {
+      state.pageNum -= 1;
+    },
+
     setInitialTransactions: (state, action) => {
       state.transactions = action.payload;
     },
@@ -43,6 +47,7 @@ const transactionsSlice = createSlice({
 export const {
   getTransactions,
   setNextPage,
+  setPrevPage,
   setInitialTransactions,
   setLoading,
 } = transactionsSlice.actions;
