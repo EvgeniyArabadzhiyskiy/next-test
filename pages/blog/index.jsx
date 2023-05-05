@@ -9,17 +9,18 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-// export const getStaticProps = () => {
-//   const store = makeStore();
 
-//   const {isLoggedIn} = store.getState().auth
+
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   (store) => async (context) => {
+//     const {isLoggedIn} = store.getState().auth
 //   console.log("getStaticProps  isLoggedIn", isLoggedIn);
 
 //   if (!isLoggedIn) {
 //     return {
 //       redirect: {
-//         destination: '/pokemons',
-//         // permanent: false,
+//         destination: '/login',
+//         permanent: false,
 //       },
 //     }
 //   }
@@ -27,7 +28,10 @@ import { useSelector } from "react-redux";
 //   return {
 //     props: {}
 //   }
-// }
+//   }
+// );
+
+
 
 // export const getServerSideProps = wrapper.getServerSideProps(
 //   (store) => async (context) => {
@@ -50,7 +54,7 @@ import { useSelector } from "react-redux";
 //   }
 // );
 
-const Blog = (props) => {
+const Blog = () => {
     // const { data: session, status  } = useSession();
     // console.log("Blog  status:", status);
     // console.log("Blog  session:", session);
@@ -87,8 +91,6 @@ const Blog = (props) => {
       <h1>Page Blog</h1>
       <Link href="/">GO HOME</Link>
       <Counter />
-
-      <h3>{props.id}</h3>
 
       <button type="button" onClick={onProba}>
         PROBA
