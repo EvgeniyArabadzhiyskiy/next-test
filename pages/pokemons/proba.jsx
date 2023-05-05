@@ -27,7 +27,8 @@ import { parseCookies } from "nookies";
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
-    const { authToken } = parseCookies(context);
+    console.log("PROBA");
+    // const { authToken } = parseCookies(context);
 
     // const { isLoggedIn } = store.getState().auth;
     // console.log("isLoggedIn:", isLoggedIn);
@@ -59,8 +60,10 @@ export const getServerSideProps = wrapper.getServerSideProps(
     // const { token } = store.getState().auth;
     // console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
 
-    if (authToken) {
-      store.dispatch(setToken(authToken));
+
+
+    // if (authToken) {
+      // store.dispatch(setToken(authToken));
 
       const { pageNum } = store.getState().transactions;
       store.dispatch(getAllTransactions.initiate({ pageNum }));
@@ -69,7 +72,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       );
       // console.log("result:", result);
       store.dispatch(setInitialTransactions(result.data || []));
-    }
+    // }
 
     store.dispatch(setInitialCounter({ amount: 10, type: "start" }));
 
