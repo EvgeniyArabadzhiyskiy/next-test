@@ -1,3 +1,4 @@
+import useAuthGuard from "@/lib/useAuthGuard";
 import { wrapper } from "@/redux/store";
 import { setNextPage, setPrevPage } from "@/redux/transactions-slice";
 import {
@@ -8,6 +9,7 @@ import {
   useAddTransactionMutation,
 } from "@/redux/walletApiService/walletApi";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
 const transData = {
@@ -36,18 +38,16 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
 const RaitingPage = () => {
   const dispatch = useDispatch();
+  const {AuthGuardPage} = useAuthGuard()
   const { transactions, pageNum } = useSelector((state) => state.transactions);
 
   const [addTransactionRTKQ] = useAddTransactionMutation();
 
-  const ddd = walletApi.endpoints.getAllTransactions.useQuery({pageNum});
-  // console.log("RaitingPage  ddd:", ddd);
-  // const { data = [] } = useGetAllTransactionsQuery({ pageNum });
+  const { data = [] } = useGetAllTransactionsQuery({ pageNum });
+  console.log("hello");
 
   const onNextPage = () => {
     dispatch(setNextPage());
-
-    // setIsSkip(false);
   };
 
   const onPrevPage = () => {
@@ -59,7 +59,7 @@ const RaitingPage = () => {
   };
 
   return (
-    <>
+    <AuthGuardPage>
       <Link href="/"> ← Back to home</Link>
 
       <button type="button" onClick={onNextPage}>
@@ -71,8 +71,8 @@ const RaitingPage = () => {
       </button>
 
       <ul className="transactions-list">
-        {ddd.data &&
-          ddd.data.map((item) => {
+        {data &&
+          data.map((item) => {
             return (
               <li key={item._id}>
                 <span>{item.category}</span>
@@ -90,7 +90,7 @@ const RaitingPage = () => {
       <button type="button" onClick={addTransaction}>
         NEW TRANSACTION
       </button>
-    </>
+    </AuthGuardPage>
   );
 };
 
