@@ -45,58 +45,101 @@ import {
 } from "@/redux/walletApiService/userApi";
 import { parseCookies } from "nookies";
 import PrivateRoute from "@/components/PrivateRoute";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setInitialCounter } from "@/redux/counter/counter";
 
 globalThis.AbortController = AbortController;
 const { wrapper } = require("../redux/store");
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+const protectedRoutes = [
+    "/blog",
+    "/pixabay",
+    "/pokemons",
+    // "/pokemons/raiting",
+    "/pokemons/new/[name]",
+  ];
+
+function MyApp({ Component, pageProps }) {
   const getLayout = Component.getLayout || ((page) => page);
-
-  const protectedRoutes = [ "/pixabay", "/blog", "/pokemons", "/pokemons/proba", "/pokemons/new/[name]"];
-  // const protectedRoutes = [ "/blog", "/pokemons", ];
-
-  const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
-  // console.log("APPPPPPPPPPPPPPPPPPPPPPPPPP");
-
-  // const { isError, isLoading } = useUserRefreshQuery(undefined, {
-  //   skip: !token,
-  // });
- 
-
-  // useEffect(() => {
-  //   const { authToken } = parseCookies();
-
-  //   if (authToken) {
-  //     dispatch(setToken(authToken));
-  //   }
-
-  //   // const authToken = window.localStorage.getItem("authToken");
-  //   // dispatch(setToken(authToken));
-  // }, [dispatch]);
-
-  // if (isLoading) {
-  //   return <h1>Loading APP...</h1>;
-  // }
 
   return (
     <>
       <GlobalLayout>
-        {getLayout(
-          // <SessionProvider session={session}>
-          // <PrivateRoute protectedRoutes={protectedRoutes}>
-            <Component {...pageProps} />
-          // </PrivateRoute>
-          //  </SessionProvider>
-        )}
+        <PrivateRoute protectedRoutes={protectedRoutes}>
+          {getLayout(<Component {...pageProps} />)}
+        </PrivateRoute>
       </GlobalLayout>
       <GlobalStyles />
     </>
   );
 }
+
+MyApp.getInitialProps = wrapper.getInitialAppProps(
+  (store) => async (appCtx) => {
+    const { authToken } = parseCookies(appCtx.ctx);
+
+    if (authToken) {
+      store.dispatch(setToken(authToken));
+      await store.dispatch(userRefresh.initiate());
+    }
+
+    const childrenGip = await App.getInitialProps(appCtx);
+
+    return {
+      pageProps: {
+        ...childrenGip.pageProps,
+      },
+    };
+  }
+);
+
+// function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+//   const getLayout = Component.getLayout || ((page) => page);
+
+//   const protectedRoutes = [ "/pixabay", "/blog", "/pokemons", "/pokemons/proba", "/pokemons/new/[name]"];
+//   // const protectedRoutes = [ "/blog", "/pokemons", ];
+
+//   const dispatch = useDispatch();
+//   const { isLoggedIn, token } = useSelector((state) => state.auth);
+//   // console.log("MyApp  isLoggedIn:", isLoggedIn);
+//   // console.log("APPPPPPPPPPPPPPPPPPPPPPPPPP");
+
+//   // const { isError, isLoading } = useUserRefreshQuery(undefined, {
+//   //   skip: !token,
+//   // });
+
+//   // useEffect(() => {
+//   //   const { authToken } = parseCookies();
+
+//   //   if (authToken) {
+//   //     dispatch(setToken(authToken));
+//   //   }
+
+//   //   // const authToken = window.localStorage.getItem("authToken");
+//   //   // dispatch(setToken(authToken));
+//   // }, [dispatch]);
+
+//   // if (isLoading) {
+//   //   return <h1>Loading APP...</h1>;
+//   // }
+
+//   return (
+//     <>
+//       <GlobalLayout>
+//         {getLayout(
+//           // <SessionProvider session={session}>
+//           // <PrivateRoute protectedRoutes={protectedRoutes}>
+//             <Component {...pageProps} />
+//           // </PrivateRoute>
+//           //  </SessionProvider>
+//         )}
+//       </GlobalLayout>
+//       <GlobalStyles />
+//     </>
+//   );
+// }
 
 // MyApp.getInitialProps = wrapper.getInitialAppProps(
 //   (store) => async (appCtx) => {
