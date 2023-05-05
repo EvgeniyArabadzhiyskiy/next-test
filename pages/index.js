@@ -69,7 +69,7 @@ export default function Home({ fallback }) {
           <Link href="/pixabay" >PIXABAY</Link>
           <Link href="/server">Server</Link>
           <Link href="/login" >LOGIN</Link>
-          <Link href="/pokemons/cache">TO CACHE</Link>
+          <Link href="/pokemons/raiting">RAITING</Link>
           <p>
             Get started by editing&nbsp;
             <code className={styles.code}>pages/index.js</code>
