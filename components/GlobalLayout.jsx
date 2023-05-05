@@ -1,4 +1,4 @@
-import { logOut } from "@/redux/auth/authSlice";
+
 import { useUserLogoutMutation } from "@/redux/walletApiService/userApi";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -16,7 +16,7 @@ const GlobalLayout = ({ children }) => {
     await userLogoutRTKQ();
     console.log("LOGOUT");
 
-    destroyCookie(null, "authToken", { path: "/" });
+    // destroyCookie(null, "authToken", { path: "/" });
     router.replace('/login')
     
     // document.cookie = `authToken=; max-age=-1`
