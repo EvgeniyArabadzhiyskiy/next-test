@@ -3,7 +3,7 @@ import { HYDRATE } from "next-redux-wrapper";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { userApi } from "../walletApiService/userApi";
 
-const { authToken } = parseCookies();
+// const { authToken } = parseCookies();
 
 const authSlice = createSlice({
   name: "authSlice",
@@ -15,50 +15,48 @@ const authSlice = createSlice({
   },
 
   reducers: {
-    logIn: (state, action) => {
-      state.isLoggedIn = true;
-    },
+    // logIn: (state, action) => {
+    //   state.isLoggedIn = true;
+    // },
 
-    logOut: (state, action) => {
-      state.isLoggedIn = false;
-    },
+    // logOut: (state, action) => {
+    //   state.isLoggedIn = false;
+    // },
 
     setToken: (state, action) => {
-      // console.log("action////////////////////////:", action.payload);
       state.token = action.payload;
     },
   },
 
   extraReducers: (builder) => {
     builder
-      // .addCase(HYDRATE, (state, action) => {
-      //   let nextState = {
-      //     ...state,
-      //     ...action.payload.auth,
-      //   };
+      .addCase(HYDRATE, (state, action) => {
+        // console.log(".addCase  action:", action);
+        // console.log(".addCase  HYDRATE:", HYDRATE);
+        let nextState = {
+          ...state,
+          ...action.payload.auth,
+        };
 
-      //   // if (state.token) {
-      //   //   nextState = state;
-      //   // }
+        // if (state.token) {
+        //   nextState = state;
+        // }
 
-      //   return nextState;
-      // })
+        return nextState;
+      })
       .addMatcher(
         userApi.endpoints.userLogin.matchFulfilled,
         (state, action) => {
-          // console.log("action:", action.payload);
-
           state.user = action.payload.user;
           state.token = action.payload.token;
           state.isLoggedIn = true;
 
-          // setCookie(null, "authToken", `${action.payload.token}`, {
-          //   maxAge: 30 * 24 * 60 * 60,
-          //   path: "/",
-          // });
-          // document.cookie = `authToken=${action.payload.token}; max-age=${30*24*60*60}`;
+          setCookie(null, "authToken", `${action.payload.token}`, {
+            maxAge: 30 * 24 * 60 * 60,
+            path: "/",
+          });
 
-          // window.localStorage.setItem('authToken', action.payload.token )
+          // document.cookie = `authToken=${action.payload.token}; max-age=${30*24*60*60}`;
         }
       )
       .addMatcher(
@@ -68,11 +66,9 @@ const authSlice = createSlice({
           state.token = null;
           state.isLoggedIn = false;
 
-          // destroyCookie(null, "authToken", { path: '/' });
+          destroyCookie(null, "authToken", { path: '/' });
+          
           // document.cookie = `authToken=; max-age=-1`
-
-          // window.localStorage.removeItem('authToken')
-
         }
       )
       .addMatcher(
