@@ -5,14 +5,17 @@ import { userApi } from "../walletApiService/userApi";
 
 // const { authToken } = parseCookies();
 
+const initialState = {
+  user: { firstName: null, email: null, balance: 0 },
+  token: null,
+  isLoggedIn: false,
+  type: 'server',
+};
+
 const authSlice = createSlice({
   name: "authSlice",
 
-  initialState: {
-    user: { firstName: null, email: null, balance: 0 },
-    token: null,
-    isLoggedIn: false,
-  },
+  initialState,
 
   reducers: {
     // logIn: (state, action) => {
@@ -31,18 +34,28 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(HYDRATE, (state, action) => {
-        // console.log(".addCase  action:", action);
         // console.log(".addCase  HYDRATE:", HYDRATE);
-        let nextState = {
-          ...state,
-          ...action.payload.auth,
-        };
+        
+        if (state.type === 'server') {
+          state.user = action.payload.auth.user
+          state.token = action.payload.auth.token
+          state.isLoggedIn = action.payload.auth.isLoggedIn
+          state.type = 'client'
+          
+        }
 
-        // if (state.token) {
-        //   nextState = state;
-        // }
+       
 
-        return nextState;
+        // let nextState = {
+        //   ...state,
+        //   ...action.payload.auth,
+        // };
+
+        // // if (state.token) {
+        // //   nextState = state;
+        // // }
+
+        // return nextState;
       })
       .addMatcher(
         userApi.endpoints.userLogin.matchFulfilled,
@@ -66,20 +79,20 @@ const authSlice = createSlice({
           state.token = null;
           state.isLoggedIn = false;
 
-          destroyCookie(null, "authToken", { path: '/' });
-          
+          destroyCookie(null, "authToken", { path: "/" });
+
           // document.cookie = `authToken=; max-age=-1`
         }
       )
       .addMatcher(
         userApi.endpoints.userRefresh.matchFulfilled,
         (state, action) => {
+          // console.log("REFRESH");
           state.user = action.payload;
           state.isLoggedIn = true;
-          
+
           // state.token = window.localStorage.getItem('authToken')
           // console.log("window.localStorage.getItem('authToken'):", window.localStorage.getItem('authToken'));
-
         }
       );
   },
