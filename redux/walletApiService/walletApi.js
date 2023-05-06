@@ -19,12 +19,12 @@ import { HYDRATE } from "next-redux-wrapper";
 // }
 
 
-const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY4MzEzMzYzNiwiZXhwIjoxNjg0MzQzMjM2fQ.qhziavWmqDtkfJ25kAlT6yEi0DvNWfVzEorVcBsso7M`;
+// const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTM0ZGFhMTQyNGVhZDExNWVhNTJhNSIsImlhdCI6MTY4MzEzMzYzNiwiZXhwIjoxNjg0MzQzMjM2fQ.qhziavWmqDtkfJ25kAlT6yEi0DvNWfVzEorVcBsso7M`;
 
 export const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
   prepareHeaders: (headers, { getState }) => {
-      // const token = getState().auth.token;
+      const token = getState().auth.token;
       // console.log("token:===========================", token);
       
     if (token) {
