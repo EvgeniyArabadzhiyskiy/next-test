@@ -23,34 +23,41 @@ const counterSlise = createSlice({
 
     decrementCounter: (state) => {
       state.counter.amount -= 1;
+      state.counter.type = "start"
     },
   },
 
   extraReducers: (builder) => {
     builder.addCase(HYDRATE, (state, action) => {
-      console.log("builder.addCase  HYDRATE:", HYDRATE);
-      const nextState = {
-        ...state,
-        ...action.payload.counter,
-      };
-    
-      if (state.counter.type === "start") {
-        nextState.counter = JSON.parse(JSON.stringify(state.counter));
 
-        // nextState.counter = {
-        //   ...nextState.counter,
-        //   amount: state.counter.amount,
-        // };
-
-        // nextState.counter = {
-        //   ...nextState.counter,
-        //   type: state.counter.type,
-        // };
+      if (state.counter.type === "init") {
+        // console.log('COUNTER');
+        state.counter = action.payload.counter.counter
       }
-      
-      return nextState;
 
-      // if (action.payload.counter.counter === 0) delete action.payload.counter.counter;
+
+      // const nextState = {
+      //   ...state,
+      //   ...action.payload.counter,
+      // };
+
+      
+    
+      // if (state.counter.type === "start") {
+      //   nextState.counter = JSON.parse(JSON.stringify(state.counter));
+
+      //   // nextState.counter = {
+      //   //   ...nextState.counter,
+      //   //   amount: state.counter.amount,
+      //   // };
+
+      //   // nextState.counter = {
+      //   //   ...nextState.counter,
+      //   //   type: state.counter.type,
+      //   // };
+      // }
+      
+      // return nextState;
     });
   },
 });
