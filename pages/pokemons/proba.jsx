@@ -91,6 +91,8 @@ const TransactionsList = () => {
     { skip: isSkip }
   );
 
+  // console.log("RE-RENDER");
+
   useEffect(() => {
     if (data.length === 0) return;
 
