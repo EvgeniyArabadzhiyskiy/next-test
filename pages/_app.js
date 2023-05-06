@@ -67,9 +67,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <GlobalLayout>
-        <PrivateRoute protectedRoutes={protectedRoutes}>
+        {/* <PrivateRoute protectedRoutes={protectedRoutes}> */}
           {getLayout(<Component {...pageProps} />)}
-        </PrivateRoute>
+        {/* </PrivateRoute> */}
       </GlobalLayout>
       <GlobalStyles />
     </>
@@ -82,7 +82,8 @@ MyApp.getInitialProps = wrapper.getInitialAppProps(
 
     if (authToken) {
       store.dispatch(setToken(authToken));
-      await store.dispatch(userRefresh.initiate());
+      const data =  await store.dispatch(userRefresh.initiate());
+      // console.log("data:", data);
     }
 
     const childrenGip = await App.getInitialProps(appCtx);
@@ -94,6 +95,8 @@ MyApp.getInitialProps = wrapper.getInitialAppProps(
     };
   }
 );
+
+
 
 // function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 //   const getLayout = Component.getLayout || ((page) => page);
