@@ -13,55 +13,55 @@ import Image from "next/image";
 import mobileImg from "../../../images/mobile.webp";
 import walletImg from "../../../public/ewallet-2.webp";
 
-export async function getStaticPaths() {
-  const store = makeStore();
-  const result = await store.dispatch(getPokemonList.initiate());
+// export async function getStaticPaths() {
+//   const store = makeStore();
+//   const result = await store.dispatch(getPokemonList.initiate());
 
-  // const arrayPath =  result.data.map((p) => `/pokemons/new/${p.name}`)
+//   // const arrayPath =  result.data.map((p) => `/pokemons/new/${p.name}`)
 
-  const arrayPath = result.data.map((p) => ({
-    params: { name: p.name },
-  }));
+//   const arrayPath = result.data.map((p) => ({
+//     params: { name: p.name },
+//   }));
+  
+//   return {
+//     paths: arrayPath,
+//     fallback: false,
+//   };
+// }
 
-  return {
-    paths: arrayPath,
-    fallback: false,
-  };
-}
-
-export const getStaticProps = wrapper.getStaticProps(
-  (store) => async (context) => {
-    const name = context.params?.name;
-
-    store.dispatch(getPokemonByName.initiate(name));
-    await Promise.all(store.dispatch(getRunningQueriesThunk()));
-
-    // return {
-    //   props: {},
-    // };
-  }
-);
-
-// export const getServerSideProps = wrapper.getServerSideProps(
+// export const getStaticProps = wrapper.getStaticProps(
 //   (store) => async (context) => {
 //     const name = context.params?.name;
 
 //     store.dispatch(getPokemonByName.initiate(name));
 //     await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
-//     // return {
-//     //   props: {},
-//     // };
+//     return {
+//       props: {},
+//     };
 //   }
 // );
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async (context) => {
+    const name = context.params?.name;
+
+    store.dispatch(getPokemonByName.initiate(name));
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
+
+    return {
+      props: {},
+    };
+  }
+);
 
 export default function PokemonOne() {
   const router = useRouter();
   const name = router.query.name;
+  console.log('Rerender');
 
   const result = useGetPokemonByNameQuery(name);
   const { isLoading, error, data } = result;
-  // console.log("PokemonOne  data", data);
 
   return (
     <Layout>
