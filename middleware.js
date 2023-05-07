@@ -1,17 +1,14 @@
 import { NextResponse } from "next/server";
-import { parseCookies } from "nookies";
-import { fetchImages } from "./lib/fetch-images";
-import { setToken } from "./redux/auth/authSlice";
-import { makeStore } from "./redux/store";
-import { userApi } from "./redux/walletApiService/userApi";
 
 export async function middleware(request) {
   // console.log("middleware  request:", request);
   // console.log("Middleware");
 
-  // const data =  fetchImages()
-  // console.log("middleware  data:", data);
+  const res = await fetch("https://pokeapi.co/api/v2/pokemon/1");
+  const data = await res.json();
+  console.log("data:", data.name);
 
+  
 
   const cookies = request.cookies;
   const authToken = cookies.get("authToken")?.value;
