@@ -62,6 +62,7 @@ const Blog = () => {
   const router = useRouter();
   // const { AuthGuardPage } = useAuthGuard();
   const { isLoggedIn } = useSelector((st) => st.auth);
+  console.log("RE-RENDER");
 
   // useEffect(() => {
   //   if (!isLoggedIn) {
