@@ -49,9 +49,11 @@ import Router, { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setInitialCounter } from "@/redux/counter/counter";
+import axios from "axios";
 
 globalThis.AbortController = AbortController;
 const { wrapper } = require("../redux/store");
+
 
 const protectedRoutes = [
     "/blog",
