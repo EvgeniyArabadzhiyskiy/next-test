@@ -71,10 +71,12 @@ export const walletApi = createApi({
       query: (body) => ({ url: `/transactions`, method: "POST", body: body }),
       
 
-      async onQueryStarted(body, { dispatch, queryFulfilled }) {
+      async onQueryStarted(body, { dispatch, queryFulfilled, getCacheEntry }) {
+        console.log("onQueryStarted  getCacheEntry:", getCacheEntry());
         const {data} =   await queryFulfilled
         // console.log(walletApi.util.updateQueryData);
 
+        
         const patchResult = dispatch(
           walletApi.util.updateQueryData('getAllTransactions', { pageNum: 2 }, (draft) => {
           // console.log("walletApi.util.updateQueryData  draft:", JSON.parse(JSON.stringify(draft)));
