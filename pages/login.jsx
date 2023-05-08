@@ -11,10 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import usePublicPage from "@/lib/usePublicPage";
 
 
 
 const LoginPage = () => {
+  const {PublicPage} = usePublicPage()
   const [userLoginRTKQ] = useUserLoginMutation();
 
   const onLogin = async () => {
@@ -38,7 +40,7 @@ const LoginPage = () => {
   };
 
   return (
-    <>
+    <PublicPage>
       <h1>Login Page</h1>
 
       <button type="button" onClick={onLogin}>
@@ -46,7 +48,7 @@ const LoginPage = () => {
       </button>
 
       <Link href="/">Go Home</Link>
-    </>
+    </PublicPage>
   );
 };
 
