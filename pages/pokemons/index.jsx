@@ -44,8 +44,9 @@ import Counter from "@/components/Counter/Counter";
 //   };
 // });
 
-export const getStaticProps = wrapper.getStaticProps((store) => async () => {
+export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
 
+  console.log("POKEMON");
   const { counter } = store.getState().counter  // Для примера
 
   store.dispatch(getPokemonList.initiate(counter));
@@ -82,7 +83,7 @@ const Pokemons = ({}) => {
 
   // const { data: pokemons, isError, isLoading } = response
 
-  const { counter } = useSelector((st) => st.counter);
+  // const { counter } = useSelector((st) => st.counter);
 
   // const [pokemons, setPokemons] = useState(null);
   // console.log("Pokemons  pokemons", pokemons);
@@ -113,7 +114,7 @@ const Pokemons = ({}) => {
     // deleteTrRTKQ(id);
   };
 
-  const { data: pokemons = [], isLoading } = useGetPokemonListQuery(counter);
+  const { data: pokemons = [], isLoading } = useGetPokemonListQuery();
   // console.log("Pokemons  pokemons", pokemons);
 
   // console.log("Pokemons  result", pokemons?.results);
