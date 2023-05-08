@@ -1,26 +1,35 @@
+import axios from "axios";
 import { NextResponse } from "next/server";
+import { BASE_URL, USER_CURRENT } from "./constants/apiPath";
 
 export async function middleware(request) {
   // console.log("middleware  request:", request);
   // console.log("Middleware");
 
-  const res = await fetch("https://pokeapi.co/api/v2/pokemon/1");
-  const data = await res.json();
-  console.log("data:", data.name);
-
-  
+  // const res = await fetch("https://pokeapi.co/api/v2/pokemon/1");
+  // const data = await res.json();
+  // console.log("data:", data.name);
 
   const cookies = request.cookies;
   const authToken = cookies.get("authToken")?.value;
-  // console.log("middleware  authToken:", authToken);
+
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  };
+
+  const resFetch = await fetch(`${BASE_URL}${USER_CURRENT}`, options);
+  const data = await resFetch.json();
+  // console.log("middleware  data:", data.email);
 
   if (!authToken) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    // return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // const response = NextResponse.next();
 
-  // return response;
+  
 }
 
 export const config = {
@@ -30,14 +39,9 @@ export const config = {
 //========================================================================
 
 // export async function middleware(request) {
-//   // const store = makeStore();
-
-//   console.log('Middleware');
 
 //   // const cookies = request.cookies;
 //   // const authToken = cookies.get("authToken")?.value;
-
-//   // console.log("I am middleware");
 
 //   // const requestHeaders = new Headers(request.headers);
 
@@ -72,27 +76,14 @@ export const config = {
 
 //   return response;
 
-//   // store.dispatch(setToken(authToken))
-//   // const authState = store.getState().auth
-//   // console.log("middleware  authState:", authState);
-
 //   // response.cookies.set('age', 35)
 
 //   // const cookies = request.cookies
 //   // console.log("middleware  cookies", cookies.get('promo')?.value);
 
-//   // const store = makeStore();
-//   // const { counter } = store.getState().counter;
-//   // console.log("middleware  =================counter", counter);
-
 //   // const { pathname } = request.nextUrl
 
-//   // const { isLoggedIn } = store.getState().auth;
-//   // console.log("middleware  isLoggedIn", isLoggedIn);
-
-//   // if (!isLoggedIn) {
 //   //   return NextResponse.redirect(new URL("/pokemons/statistic", request.url));
-//   // }
 
 //   // if ( pathname === '/blog') {
 //   //   return NextResponse.redirect(new URL("/pokemons/raiting", request.url));
