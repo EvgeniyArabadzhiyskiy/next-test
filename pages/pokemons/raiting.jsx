@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useDispatch, useSelector } from "react-redux";
 
+
 const transData = {
   amount: 500,
   category: "WODA",
@@ -30,19 +31,19 @@ export const getServerSideProps = wrapper.getServerSideProps(
     async (context) => {
       const { authToken } = parseCookies(context);
 
-      // if (!authToken) {
-      //   return { redirect: { destination: '/login', permanent: false } }
-      // }
-      
+      if (!authToken) {
+        return { redirect: { destination: "/login", permanent: false } };
+      }
+
       const res = await dispatch(getAllTransactions.initiate({ pageNum: 1 }));
-      
-      
+
       return { props: {} };
     }
 );
 
 const RaitingPage = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   // const {AuthGuardPage} = useAuthGuard()
 
   const { token } = useSelector((state) => state.auth);
@@ -50,7 +51,10 @@ const RaitingPage = () => {
 
   const [addTransactionRTKQ] = useAddTransactionMutation();
 
-  const { data = [] } = useGetAllTransactionsQuery({ pageNum }, {skip: !token});
+  const { data = [] } = useGetAllTransactionsQuery(
+    { pageNum },
+    { skip: !token }
+  );
   // console.log("RE-RENDER");
 
   const onNextPage = async () => {
