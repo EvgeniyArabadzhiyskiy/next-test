@@ -25,6 +25,8 @@ const transactionsSlice = createSlice({
       state.transactions = action.payload;
     },
 
+    
+
   
   },
 
