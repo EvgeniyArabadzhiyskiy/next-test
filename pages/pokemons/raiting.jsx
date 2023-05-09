@@ -1,4 +1,6 @@
+import { useAddToCache } from "@/lib/useAddToCache";
 import useAuthGuard from "@/lib/useAuthGuard";
+import { useRemoveromCache } from "@/lib/useRemoveromCache";
 import { wrapper } from "@/redux/store";
 import { setNextPage, setPrevPage } from "@/redux/transactions-slice";
 import { userApi } from "@/redux/walletApiService/userApi";
@@ -8,12 +10,12 @@ import {
   getRunningQueriesThunk,
   walletApi,
   useAddTransactionMutation,
+  useDeleteTransactionMutation,
 } from "@/redux/walletApiService/walletApi";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useDispatch, useSelector } from "react-redux";
-
 
 const transData = {
   amount: 500,
@@ -49,7 +51,11 @@ const RaitingPage = () => {
   const { token } = useSelector((state) => state.auth);
   const { transactions, pageNum } = useSelector((state) => state.transactions);
 
+  const { addTransactionCache } = useAddToCache();
   const [addTransactionRTKQ] = useAddTransactionMutation();
+
+  const { removeTransactionCache } = useRemoveromCache();
+  const [deleteTransactionRTKQ] = useDeleteTransactionMutation();
 
   const { data = [] } = useGetAllTransactionsQuery(
     { pageNum },
@@ -65,8 +71,14 @@ const RaitingPage = () => {
     dispatch(setPrevPage());
   };
 
-  const addTransaction = () => {
-    addTransactionRTKQ(transData);
+  const addTransaction = async () => {
+    const { data } = await  addTransactionRTKQ(transData);
+    addTransactionCache(data);
+  };
+
+  const deleteTransaction = async (id) => {
+    const { data } = await deleteTransactionRTKQ(id);
+    removeTransactionCache(data);
   };
 
   return (
