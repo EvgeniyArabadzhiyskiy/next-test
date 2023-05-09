@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
+import { walletApi } from "./walletApiService/walletApi";
 
 const transactionsSlice = createSlice({
   name: "transactions",
@@ -11,6 +12,7 @@ const transactionsSlice = createSlice({
   reducers: {
     getTransactions: (state, action) => {
       state.transactions = [...state.transactions, ...action.payload];
+      // state.transactions = [...action.payload];
     },
 
     setNextPage: (state) => {
@@ -53,7 +55,13 @@ const transactionsSlice = createSlice({
       // }
 
       // return nextState;
-    });
+    }).addMatcher(
+      walletApi.endpoints.getAllTransactions.matchFulfilled,
+      (state, action) => {
+        state.transactions = [...state.transactions, ...action.payload];
+        // state.transactions = [ ...action.payload];
+      }
+    )
   },
 });
 
