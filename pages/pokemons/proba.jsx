@@ -10,12 +10,15 @@ import {
   useDeleteTransactionMutation,
   useGetAllTransactionsQuery,
   getRunningQueriesThunk,
+  useAddTransactionMutation,
+  walletApi,
 } from "@/redux/walletApiService/walletApi";
 
 import {
   getTransactions,
   setInitialTransactions,
   setNextPage,
+  setPrevPage,
 } from "@/redux/transactions-slice";
 
 import { setInitialCounter } from "@/redux/counter/counter";
@@ -24,10 +27,22 @@ import { setToken } from "@/redux/auth/authSlice";
 import axios from "axios";
 import { useServerRedirect } from "@/lib/useServerRedirect";
 import { parseCookies } from "nookies";
+import { useAddToCache } from "@/lib/useAddToCache";
+import { useRemoveromCache } from "@/lib/useRemoveromCache";
+
+const transData = {
+  amount: 500,
+  category: "WODA",
+  typeOperation: "expense",
+  comment: "Fruits",
+  // date: "Wed Apr 05 2023 21:43:29 GMT+0300 (Восточная Европа, летнее время)",
+  // Wed Apr 05 2023 21:43:44 GMT+0300 //==15==
+  date: "Wed Apr 05 2023 21:41:36 GMT+0300 (Восточная Европа, летнее время)",
+  // date: new Date().toString(),
+};
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
-    console.log("PROBA");
     // const { authToken } = parseCookies(context);
 
     // const { isLoggedIn } = store.getState().auth;
@@ -60,18 +75,16 @@ export const getServerSideProps = wrapper.getServerSideProps(
     // const { token } = store.getState().auth;
     // console.log("++++++++++++++++++++++token+++++++++++++++++++++++++:", token);
 
-
-
     // if (authToken) {
-      // store.dispatch(setToken(authToken));
+    // store.dispatch(setToken(authToken));
 
-      const { pageNum } = store.getState().transactions;
-      store.dispatch(getAllTransactions.initiate({ pageNum }));
-      const [result] = await Promise.all(
-        store.dispatch(getRunningQueriesThunk())
-      );
-      // console.log("result:", result);
-      store.dispatch(setInitialTransactions(result.data || []));
+    const { pageNum } = store.getState().transactions;
+    store.dispatch(getAllTransactions.initiate({ pageNum }));
+    const [result] = await Promise.all(
+      store.dispatch(getRunningQueriesThunk())
+    );
+    // console.log("result:", result);
+    // store.dispatch(setInitialTransactions(result.data || []));
     // }
 
     store.dispatch(setInitialCounter({ amount: 10, type: "start" }));
@@ -81,35 +94,67 @@ export const getServerSideProps = wrapper.getServerSideProps(
 );
 
 const TransactionsList = () => {
-  const [isSkip, setIsSkip] = useState(true);
+  // const [isSkip, setIsSkip] = useState(true);
 
   const dispatch = useDispatch();
   const { transactions, pageNum } = useSelector((state) => state.transactions);
 
-  const { data = [] } = useGetAllTransactionsQuery(
-    { pageNum },
-    { skip: isSkip }
-  );
+  const { addTransactionCache } = useAddToCache();
+  const [addTransactionRTKQ] = useAddTransactionMutation();
 
-  // console.log("RE-RENDER");
-
-  useEffect(() => {
-    if (data.length === 0) return;
-
-    dispatch(getTransactions(data));
-  }, [data, dispatch]);
-
+  const { removeTransactionCache } = useRemoveromCache();
   const [deleteTransactionRTKQ] = useDeleteTransactionMutation();
 
-  const deleteTransaction = (id) => {
-    // deleteTransactionRTKQ(id);
+  const { data = [] } = useGetAllTransactionsQuery(
+    { pageNum }
+    // { skip: isSkip }
+  );
+
+  
+  const  onUpdateCache = async () => {
+
   };
 
+  // useEffect(() => {
+  //   if (data.length === 0) return;
+
+  //   dispatch(getTransactions(data));
+  // }, [data, dispatch]);
+
+  
   const onNextPage = () => {
     dispatch(setNextPage());
 
-    setIsSkip(false);
+    // setIsSkip(false);
   };
+
+  const onPrevPage = () => {
+    dispatch(setPrevPage());
+  };
+
+  const addTransaction = async () => {
+    const { data } = await  addTransactionRTKQ(transData);
+    addTransactionCache(data);
+  };
+
+  const deleteTransaction = async (id) => {
+    const { data } = await deleteTransactionRTKQ(id);
+    removeTransactionCache(data);
+  };
+
+  // const visiblePage = () => {
+  //   const PAGE_LIMIT = 5;
+  //   const startNum = (pageNum - 1) * PAGE_LIMIT;
+  //   const endNum = pageNum * PAGE_LIMIT;
+
+  //   const visiblePage = transactions.slice(startNum, endNum);
+
+  //   if (visiblePage.length === 0) {
+  //     return transactions.slice(startNum - PAGE_LIMIT, endNum - PAGE_LIMIT);
+  //   }
+
+  //   return visiblePage;
+  // };
 
   return (
     <>
@@ -118,7 +163,6 @@ const TransactionsList = () => {
         <meta name="description" content="Transactions List" />
       </Head>
 
-      {/* <h2>User {token}</h2> */}
 
       <div>
         <h1>Transactions</h1>
@@ -126,13 +170,17 @@ const TransactionsList = () => {
         <button type="button" onClick={onNextPage}>
           Next Page
         </button>
+        <button type="button" disabled={pageNum <= 1} onClick={onPrevPage}>
+          Prev Page
+        </button>
+        <button onClick={onUpdateCache}>Add post to cache</button>
       </div>
 
       <Counter />
 
       <ul className="transactions-list">
-        {transactions &&
-          transactions.map((item) => {
+        {data &&
+          data.map((item) => {
             return (
               <li key={item._id}>
                 <span>{item.category}</span>
@@ -146,6 +194,9 @@ const TransactionsList = () => {
             );
           })}
       </ul>
+      <button type="button" onClick={addTransaction}>
+        NEW TRANSACTION
+      </button>
     </>
   );
 };
@@ -422,12 +473,10 @@ export default TransactionsList;
 
 //   //     const data = await res.json()
 //   //     // console.log("getTransact  data:", data);
-      
+
 //   //     // setResult(data?.transactions);
 //   //   })();
 //   // }, []);
-
- 
 
 //   return (
 //     <>
