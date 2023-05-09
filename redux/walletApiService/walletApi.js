@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/constants/apiPath";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { HYDRATE } from "next-redux-wrapper";
+import { getTransactions } from "../transactions-slice";
 
 
 // function getItems(arg) {
@@ -58,8 +59,13 @@ export const walletApi = createApi({
         }
       },
 
-      async onQueryStarted(arg, { dispatch,  getCacheEntry, updateCachedData }) {
-       
+      async onQueryStarted(arg, { dispatch, getState,  queryFulfilled, updateCachedData }) {
+        await queryFulfilled
+        const { transactions } = getState().transactions
+        
+        // console.log("GO GO GO");
+        // const { data } = await queryFulfilled;
+        // dispatch(getTransactions(data));
       },
 
       transformResponse: (response) => response.transactions,
@@ -71,20 +77,20 @@ export const walletApi = createApi({
       query: (body) => ({ url: `/transactions`, method: "POST", body: body }),
       
 
-      async onQueryStarted(body, { dispatch, queryFulfilled, getCacheEntry }) {
-        console.log("onQueryStarted  getCacheEntry:", getCacheEntry());
+      async onQueryStarted(body, { dispatch,  queryFulfilled, getCacheEntry }) {
         const {data} =   await queryFulfilled
-        // console.log(walletApi.util.updateQueryData);
-
+        const currentCache = getCacheEntry()  // только после    const {data} =   await queryFulfilled
         
-        const patchResult = dispatch(
-          walletApi.util.updateQueryData('getAllTransactions', { pageNum: 2 }, (draft) => {
-          // console.log("walletApi.util.updateQueryData  draft:", JSON.parse(JSON.stringify(draft)));
-          
-           return [...draft, data]
-          })
-        )
-        // console.log("onQueryStarted  patchResult:", patchResult);
+        
+        // const patchResult = dispatch(
+        //   walletApi.util.updateQueryData('getAllTransactions', { pageNum: 2 }, (draft) => {
+        //     // console.log("walletApi.util.updateQueryData  draft:", JSON.parse(JSON.stringify(draft)));
+            
+        //     return [...draft, data]
+        //   })
+        // )
+          // console.log("onQueryStarted  patchResult:", patchResult);
+
 
       },
       
@@ -93,7 +99,7 @@ export const walletApi = createApi({
     deleteTransaction: builder.mutation({
       query: (id) => ({ url: `/transactions/${id}`, method: "DELETE" }),
 
-      invalidatesTags: ["Transaction"],
+      // invalidatesTags: ["Transaction"],
     }),
   }),
 });
