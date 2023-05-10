@@ -28,7 +28,7 @@ import axios from "axios";
 import { useServerRedirect } from "@/lib/useServerRedirect";
 import { parseCookies } from "nookies";
 import { useAddToCache } from "@/lib/useAddToCache";
-import { useRemoveromCache } from "@/lib/useRemoveromCache";
+import { useRemoveFromCache } from "@/lib/useRemoveFromCache";
 
 const transData = {
   amount: 500,
@@ -102,7 +102,7 @@ const TransactionsList = () => {
   const { addTransactionCache } = useAddToCache();
   const [addTransactionRTKQ] = useAddTransactionMutation();
 
-  const { removeTransactionCache } = useRemoveromCache();
+  const { removeTransactionCache } = useRemoveFromCache();
   const [deleteTransactionRTKQ] = useDeleteTransactionMutation();
 
   const { data = [] } = useGetAllTransactionsQuery(
