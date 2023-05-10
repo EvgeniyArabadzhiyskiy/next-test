@@ -1,6 +1,6 @@
 import { useAddToCache } from "@/lib/useAddToCache";
 import useAuthGuard from "@/lib/useAuthGuard";
-import { useRemoveromCache } from "@/lib/useRemoveromCache";
+import { useRemoveFromCache } from "@/lib/useRemoveFromCache";
 import { wrapper } from "@/redux/store";
 import { setNextPage, setPrevPage } from "@/redux/transactions-slice";
 import { userApi } from "@/redux/walletApiService/userApi";
@@ -54,7 +54,7 @@ const RaitingPage = () => {
   const { addTransactionCache } = useAddToCache();
   const [addTransactionRTKQ] = useAddTransactionMutation();
 
-  const { removeTransactionCache } = useRemoveromCache();
+  const { removeTransactionCache } = useRemoveFromCache();
   const [deleteTransactionRTKQ] = useDeleteTransactionMutation();
 
   const { data = [] } = useGetAllTransactionsQuery(
