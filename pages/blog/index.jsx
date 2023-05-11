@@ -1,15 +1,15 @@
 import Counter from "@/components/Counter/Counter";
 import NestedLayout from "@/components/NestedLayout";
+import { BASE_URL, USER_LOGIN } from "@/constants/apiPath";
 import useAuthGuard from "@/lib/useAuthGuard";
 import { makeStore, wrapper } from "@/redux/store";
+import axios from "axios";
 import { getSession, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // import Router from 'next/router';
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-
-
 
 // export const getServerSideProps = wrapper.getServerSideProps(
 //   (store) => async (context) => {
@@ -30,8 +30,6 @@ import { useSelector } from "react-redux";
 //   }
 //   }
 // );
-
-
 
 // export const getServerSideProps = wrapper.getServerSideProps(
 //   (store) => async (context) => {
@@ -55,9 +53,9 @@ import { useSelector } from "react-redux";
 // );
 
 const Blog = () => {
-    // const { data: session, status  } = useSession();
-    // console.log("Blog  status:", status);
-    // console.log("Blog  session:", session);
+  // const { data: session, status  } = useSession();
+  // console.log("Blog  status:", status);
+  // console.log("Blog  session:", session);
 
   const router = useRouter();
   // const { AuthGuardPage } = useAuthGuard();
@@ -71,8 +69,57 @@ const Blog = () => {
 
   // },[router, isLoggedIn]);
 
-  const onProba = () => {
-    router.push("/pokemons/proba");
+  const onProba = async () => {
+    // router.push("/pokemons/proba");
+
+    // const credentials = {
+    //   email: "user100@mail.com",
+    //   password: "a123456",
+    // };
+
+    // const { data } = await axios.post(`${BASE_URL}${USER_LOGIN}`, credentials);
+
+    const aaa = await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(333);
+      }, 1000);
+    });
+
+    console.log("aaa  aaa:", aaa);
+
+    const bbb = await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(555);
+      }, 1000);
+    });
+    console.log("bbb  bbb:", bbb);
+
+    // try {
+    //   const bbb = await new Promise((resolve, reject) => {
+    //     setTimeout(() => {
+    //       reject(555)
+    //     }, 3000);
+    //   })
+    //   console.log("bbb  bbb:", bbb);
+    // } catch (error) {
+    //   console.log("onProba  error:", error);
+
+    // }
+
+    const ccc = await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(777);
+      }, 1000);
+    });
+
+    console.log("ccc  ccc:", ccc);
+
+    // try {
+    //   const result = await Promise.all([aaa, bbb, ccc]);
+    //   console.log("onProba  result:", result);
+    // } catch (error) {
+    //   console.log("onProba  error:", error);
+    // }
   };
 
   // if (status === "loading") {
