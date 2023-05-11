@@ -3,33 +3,24 @@ import { NextResponse } from "next/server";
 import { BASE_URL, USER_CURRENT } from "./constants/apiPath";
 
 export async function middleware(request) {
-  // console.log("middleware  request:", request);
-  // console.log("Middleware");
-
-  // const res = await fetch("https://pokeapi.co/api/v2/pokemon/1");
-  // const data = await res.json();
-  // console.log("data:", data.name);
-
   const cookies = request.cookies;
   const authToken = cookies.get("authToken")?.value;
-
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  };
-
-  const resFetch = await fetch(`${BASE_URL}${USER_CURRENT}`, options);
-  const data = await resFetch.json();
-  // console.log("middleware  data:", data.email);
 
   if (!authToken) {
     // return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  // const options = {
+  //   method: "GET",
+  //   headers: {
+  //     Authorization: `Bearer ${authToken}`,
+  //   },
+  // };
 
-  
+  // const resFetch = await fetch(`${BASE_URL}${USER_CURRENT}`, options);
+  // const data = await resFetch.json();
+  // console.log("middleware  data:", data.email);
+
 }
 
 export const config = {
