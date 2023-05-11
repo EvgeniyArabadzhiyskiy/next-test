@@ -78,49 +78,11 @@ const Blog = () => {
     // };
 
     // const { data } = await axios.post(`${BASE_URL}${USER_LOGIN}`, credentials);
+    
 
-    const aaa = await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(333);
-      }, 1000);
-    });
-
-    console.log("aaa  aaa:", aaa);
-
-    const bbb = await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(555);
-      }, 1000);
-    });
-    console.log("bbb  bbb:", bbb);
-
-    // try {
-    //   const bbb = await new Promise((resolve, reject) => {
-    //     setTimeout(() => {
-    //       reject(555)
-    //     }, 3000);
-    //   })
-    //   console.log("bbb  bbb:", bbb);
-    // } catch (error) {
-    //   console.log("onProba  error:", error);
-
-    // }
-
-    const ccc = await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(777);
-      }, 1000);
-    });
-
-    console.log("ccc  ccc:", ccc);
-
-    // try {
-    //   const result = await Promise.all([aaa, bbb, ccc]);
-    //   console.log("onProba  result:", result);
-    // } catch (error) {
-    //   console.log("onProba  error:", error);
-    // }
   };
+
+
 
   // if (status === "loading") {
   //   return <div>Loading...</div>
